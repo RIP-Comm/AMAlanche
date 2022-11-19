@@ -13,10 +13,10 @@ After package installations, you can start nodeamon launching:
 
 ## Project Structure
 
- - `app` : folder with frontend
- - `src` : folder with backend
-    - `interfaces`: contains all typescript interfaces to take full advantage of typescript;
-    - `loaders`: this folder contains all scritp to initialize server (executed at server startup) like dependency container and express initializzation;
+ - `app` : folder for frontend application;
+ - `src` : folder for backend application;
+    - `interfaces`: contains all interfaces to take full advantage of typescript;
+    - `loaders`: this folder contains all scritp to initialize server, executed once at server startup, like dependency container and express initializzation;
     - `middleware`: this folder group all middleware;
     - `models`: folder for database entity;
     - `routes`: api entry point;
