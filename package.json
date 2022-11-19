@@ -4,8 +4,10 @@
   "description": "New open source Q&A application",
   "main": "main.ts",
   "scripts": {
+    "start": "NODE_PATH=./build node build/app.js",
+    "build": "tsc --build",
     "dev": "nodemon",
-    "build": "tsc --build"
+    "docker:dev": "docker-compose --file docker-compose.yml --file docker-compose.dev.yml --compatibility up --build"
   },
   "author": "R.I.P. Community",
   "license": "",

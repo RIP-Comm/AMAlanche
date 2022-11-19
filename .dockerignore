@@ -1,0 +1,11 @@
+database
+node_modules
+.env
+.git
+# you usually don't want dockerfile and compose files in the image either
+*Dockerfile*
+*docker-compose*
+*.md
+app
+.env.example
+npm-debug.log
