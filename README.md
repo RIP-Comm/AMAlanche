@@ -6,24 +6,27 @@ To launch backend server install node package using:
 
 > npm install
 
-After package installations, you can start nodeamon launching:
+After package installations, you can start nodemon launching:
 
 > npm run dev
 
+Or with docker:
+
+> npm run docker:dev
 
 ## Project Structure
 
  - `app` : folder for frontend application;
  - `src` : folder for backend application;
     - `interfaces`: contains all interfaces to take full advantage of typescript;
-    - `loaders`: this folder contains all scritp to initialize server, executed once at server startup, like dependency container and express initializzation;
+    - `loaders`: this folder contains all script to initialize server, executed once at server startup, like dependency container and express initialization;
     - `middleware`: this folder group all middleware;
     - `models`: folder for database entity;
     - `routes`: api entry point;
     - `services`: folder with all Business logic;
 
 ## Dependency Injection
-This project is predispose to use Dipendecy Injection. See [typedi](https://github.com/typestack/typedi) documentation.
+This project is predispose to use Dependency Injection. See [typedi](https://github.com/typestack/typedi) documentation.
 
 ## Request validation
 
