@@ -11,14 +11,13 @@ async function startServer() {
 
   await require('./loaders').default({ expressApp: app });
 
-  app
-    .listen(process.env.PORT, () => {
-      Logger.info(`Server listening on port: ${process.env.PORT}`);
-    })
-    .on('error', err => {
-      Logger.error(err);
-      process.exit(1);
-    });
+  app.listen(process.env.PORT, () => {
+    Logger.info(`Server listening on port: ${process.env.PORT}`);
+  })
+  .on('error', err => {
+    Logger.error(err);
+    process.exit(1);
+  });
 }
 
 startServer();
