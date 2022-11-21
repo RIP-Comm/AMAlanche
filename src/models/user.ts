@@ -1,7 +1,7 @@
 import { model, Schema, Model } from 'mongoose';
 import { IUser } from '../interfaces/user';
 
-const userCollection = 'users'
+const userCollection = 'users';
 
 const UserSchema: Schema = new Schema({
   username: { type: String, required: true },
@@ -10,7 +10,7 @@ const UserSchema: Schema = new Schema({
   isVerified: { type: Boolean, required: true, default: false },
   password: { type: String, required: true },
   salt: { type: String, required: true },
-  createdAt: { type: Date, required: true, default: Date.now() }
+  createdAt: { type: Date, required: true, default: Date.now() },
 });
 
 const User: Model<IUser> = model('User', UserSchema, userCollection) as Model<IUser>;

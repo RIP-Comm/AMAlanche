@@ -1,4 +1,3 @@
-
 import Logger from './logger';
 import dependencyInjectorLoader from './dependencyInjector';
 import expressLoader from './express';
@@ -9,7 +8,7 @@ export default async ({ expressApp }): Promise<void> => {
   const dbConnection = await mongo();
   Logger.info('Database connection loaded');
 
-  await dependencyInjectorLoader({dbConnection});
+  await dependencyInjectorLoader({ dbConnection });
   Logger.info('Dependency Injector loaded');
 
   await expressLoader({ app: expressApp });

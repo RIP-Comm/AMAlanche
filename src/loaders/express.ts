@@ -2,10 +2,8 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import routes from '../routes';
 import { isCelebrateError } from 'celebrate';
-import LoggerInstance from './logger';
 
 export default ({ app }: { app: express.Application }) => {
-
   app.get('/status', (req: Request, res: Response) => {
     res.status(200).end();
   });
@@ -21,18 +19,18 @@ export default ({ app }: { app: express.Application }) => {
 
   //Celebrate error handler
   app.use((err, req: Request, res: Response, next) => {
-    if(isCelebrateError(err)){
+    if (isCelebrateError(err)) {
       const error = {
         details: err.details,
         message: err.message,
         name: err.name,
-        stack: err.stack
-      }
+        stack: err.stack,
+      };
       res.status(400).json(error);
     } else {
       next(err);
     }
-  })
+  });
 
   /// catch 404 and forward to error handler
   app.use((req: Request, res: Response, next) => {
