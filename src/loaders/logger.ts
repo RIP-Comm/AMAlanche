@@ -11,7 +11,7 @@ if (process.env.NODE_ENV !== 'development') {
   );
 }
 
-const LoggerInstance:Logger = winston.createLogger({
+const LoggerInstance: Logger = winston.createLogger({
   level: process.env.LOG_LEVEL,
   levels: winston.config.npm.levels,
   format: winston.format.combine(
