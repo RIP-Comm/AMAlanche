@@ -28,7 +28,7 @@ Or with docker:
 ## Dependency Injection
 This project is predispose to use Dependency Injection. See [typedi](https://github.com/typestack/typedi) documentation.
 
-## Request validation
+## Request validation 
 
 To validate request has been introduced [celebrate](https://github.com/arb/celebrate) middleware.
 
