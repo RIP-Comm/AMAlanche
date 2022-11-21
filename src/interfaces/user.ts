@@ -6,10 +6,10 @@ export interface IUser {
   username: string,
   role: Role,
   email: string,
-  isAuthenticated: boolean,
+  isVerified: boolean,
   password: string,
   salt: string,
-  creationDate: Date
+  createdAt: Date
 }
 
 export interface ICreateUser {
