@@ -1,0 +1,30 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "env": {
+    "node": true
+  },
+  "plugins": ["prettier"],
+  "extends": ["eslint:recommended", "prettier"],
+  "parserOptions": { "ecmaVersion": 2020, "sourceType": "module" },
+  "rules": {
+    "prettier/prettier": "error",
+    "no-console": "error"
+  },
+  "overrides": [
+    {
+      "files": ["*.ts", ".tsx"],
+      "plugins": ["@typescript-eslint"],
+      "extends": ["plugin:@typescript-eslint/recommended"],
+      "rules": {
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          {
+            "varsIgnorePattern": "^_",
+            "argsIgnorePattern": "^_"
+          }
+        ]
+      }
+    }
+  ]
+}
