@@ -1,4 +1,8 @@
-export type Role = 'admin' | 'moderator' | 'user';
+export enum Role {
+  ADMIN = 'admin',
+  MODERATOR = 'moderator',
+  USER = 'user',
+}
 
 export interface IUser {
   _id: string;
@@ -16,5 +20,4 @@ export interface ICreateUser {
   role?: Role;
   email: string;
   password: string;
-  salt: string;
 }

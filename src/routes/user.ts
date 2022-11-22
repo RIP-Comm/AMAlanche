@@ -1,7 +1,12 @@
 import { celebrate, Joi, Segments } from 'celebrate';
-import { Router, Request, Response } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import Container from 'typedi';
 import UserService from '../services/user';
+import { CustomError } from '../utils/response/custom-error/CustomError';
+// TODO: example, to de-comment when login is implemented
+// import { checkJwt } from '../middleware/checkJwt';
+// import { checkRole } from '../middleware/checkRole';
+// import { Role } from '../interfaces/user';
 
 const route = Router();
 
@@ -10,14 +15,24 @@ export default (app: Router) => {
 
   route.get(
     '/:id',
-    celebrate({
-      [Segments.PARAMS]: Joi.object().keys({
-        id: Joi.string().required(),
+    [
+      // TODO: example, to de-comment when login is implemented
+      // checkJwt,
+      // checkRole([Role.ADMIN]),
+      celebrate({
+        [Segments.PARAMS]: Joi.object().keys({
+          id: Joi.string().required(),
+        }),
       }),
-    }),
-    async (req: Request, res: Response) => {
-      const userService: UserService = Container.get(UserService);
-      res.json(await userService.get(req.params.id));
+    ],
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const userService: UserService = Container.get(UserService);
+        res.json(await userService.get(req.params.id));
+      } catch (error) {
+        const customError = new CustomError(400, 'Raw', 'Error', null, error);
+        return next(customError);
+      }
     },
   );
 
@@ -30,18 +45,28 @@ export default (app: Router) => {
   if (process.env.NODE_ENV === 'development') {
     route.post(
       '/',
-      celebrate({
-        [Segments.BODY]: Joi.object().keys({
-          username: Joi.string().required(),
-          email: Joi.string().required(),
-          password: Joi.string().required(),
-          salt: Joi.string().required(),
-          role: Joi.string().valid('admin', 'moderator', 'user'),
+      [
+        // TODO: example, to de-comment when login is implemented
+        // checkJwt,
+        // checkRole([Role.ADMIN]),
+        celebrate({
+          [Segments.BODY]: Joi.object().keys({
+            username: Joi.string().required(),
+            email: Joi.string().required(),
+            password: Joi.string().required(),
+            role: Joi.string().valid('admin', 'moderator', 'user'),
+          }),
         }),
-      }),
-      async (req: Request, res: Response) => {
-        const userService: UserService = Container.get(UserService);
-        res.json(await userService.create(req.body));
+      ],
+      async (req: Request, res: Response, next: NextFunction) => {
+        try {
+          const userService: UserService = Container.get(UserService);
+          const createdUser = await userService.create(req.body);
+          res.customSuccess(200, `Created user`, createdUser);
+        } catch (error) {
+          const customError = new CustomError(400, 'Raw', 'Error', null, error);
+          return next(customError);
+        }
       },
     );
   }
