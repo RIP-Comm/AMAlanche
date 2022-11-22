@@ -1,5 +1,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import { Center, Heading } from '@chakra-ui/react';
 
 function Home() {
   return (
@@ -7,7 +8,9 @@ function Home() {
       <Helmet>
         <title>AMAlanche</title>
       </Helmet>
-      <h1>AMAlanche</h1>
+      <Center mt="5">
+        <Heading>AMAlanche</Heading>
+      </Center>
     </>
   );
 }
