@@ -24,6 +24,8 @@ Or with docker:
     - `models`: folder for database entity;
     - `routes`: api entry point;
     - `services`: folder with all Business logic;
+    - `types`: folder with all types;
+    - `utils`: utils folder;
 
 ## Dependency Injection
 This project is predispose to use Dependency Injection. See [typedi](https://github.com/typestack/typedi) documentation.
