@@ -1,9 +1,11 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import App from '../App';
 
-test('renders title', () => {
+test('renders title', async () => {
   render(<App />);
-  const title = screen.getByText('AMAlanche');
-  expect(title).toBeInTheDocument();
+  await waitFor(() => {
+    const title = screen.getByText('AMAlanche');
+    expect(title).toBeInTheDocument();
+  });
 });
