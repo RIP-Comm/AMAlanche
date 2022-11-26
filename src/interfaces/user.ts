@@ -21,3 +21,9 @@ export interface ICreateUser {
   email: string;
   password: string;
 }
+
+export interface IMinimalUser {
+  _id: string;
+  username: string;
+  role: Role;
+}

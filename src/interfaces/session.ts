@@ -1,7 +1,9 @@
+import { IMinimalUser } from './user';
+
 export interface ISession {
   _id: string;
   url: string;
-  owner: string;
+  owner: string | IMinimalUser;
   quesiton: string;
   title: string;
 }
