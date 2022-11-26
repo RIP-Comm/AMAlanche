@@ -10,8 +10,8 @@
 		"docker:dev": "docker-compose --file docker-compose.yml --file docker-compose.dev.yml --compatibility up --build",
 		"format:check": "prettier --check .",
 		"format:write": "prettier --write .",
-		"lint:check": "eslint . --ext=.ts,.js",
-		"lint:fix": "eslint --fix . --ext=.ts,.js"
+		"lint:check": "eslint ./src --ext=.ts,.js",
+		"lint:fix": "eslint --fix ./src --ext=.ts,.js"
 	},
 	"author": "R.I.P. Community",
 	"license": "",
