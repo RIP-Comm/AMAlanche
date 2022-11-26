@@ -7,9 +7,10 @@ import { errors } from 'celebrate';
 import '../utils/response/customSuccess';
 
 export default ({ app }: { app: express.Application }) => {
-  app.route('/health')
+  app
+    .route('/health')
     .get((req: Request, res: Response) => {
-      res.status(200).send("AMALANCHE Service: Up & Ready");
+      res.status(200).send('AMALANCHE Service: Up & Ready');
     })
     .head((req: Request, res: Response) => {
       res.status(200).end();
