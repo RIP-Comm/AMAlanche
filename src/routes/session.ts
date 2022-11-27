@@ -39,7 +39,7 @@ export default (app: Router) => {
     .all(
       celebrate({
         [Segments.PARAMS]: Joi.object().keys({
-          id: Joi.string().required(),
+          id: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required(),
         }),
       }),
     )
