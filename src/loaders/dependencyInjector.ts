@@ -1,13 +1,13 @@
 import { Container } from 'typedi';
+import Logger from './logger';
 
-import LoggerInstance from './logger';
-
-export default () => {
+export default ({ dbConnection }) => {
   try {
     //Add here all dependency that have to injected in a service.
-    Container.set('logger', LoggerInstance);
+    Container.set('database-connection', dbConnection);
+    Container.set('logger', Logger);
   } catch (e) {
-    LoggerInstance.error('🔥 Error on dependency injector loader: %o', e);
+    Logger.error('Error on dependency injector loader: %o', e);
     throw e;
   }
 };
