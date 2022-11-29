@@ -41,6 +41,7 @@
 		"celebrate": "^15.0.1",
 		"cors": "^2.8.5",
 		"dotenv": "^16.0.3",
+		"event-dispatch": "^0.4.1",
 		"express": "^4.18.2",
 		"git-conventional-commits": "^2.3.0",
 		"jsonwebtoken": "^8.5.1",
