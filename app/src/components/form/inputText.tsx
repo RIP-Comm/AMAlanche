@@ -18,7 +18,13 @@ interface InputTextProps {
   type?: 'text' | 'password';
 }
 
-const InputText = ({ register, errors, id, label, type = 'text' }: InputTextProps) => {
+const InputText = ({
+  register,
+  errors,
+  id,
+  label,
+  type = 'text'
+}: InputTextProps) => {
   const [show, setShow] = useState<boolean>(false);
   const handleClick = () => setShow(!show);
 
@@ -44,7 +50,9 @@ const InputText = ({ register, errors, id, label, type = 'text' }: InputTextProp
           </InputRightElement>
         )}
       </InputGroup>
-      <FormErrorMessage>{errors[id] && errors[id].message}</FormErrorMessage>
+      <FormErrorMessage>
+        {errors[id] && errors[id].message}
+      </FormErrorMessage>
     </FormControl>
   );
 };
