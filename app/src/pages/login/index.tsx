@@ -12,7 +12,9 @@ export interface LoginFormType {
 }
 
 const validationSchema = Yup.object().shape({
-  email: Yup.string().required('Email is required').email('Email is invalid'),
+  email: Yup.string()
+    .required('Email is required')
+    .email('Email is invalid'),
   password: Yup.string()
     .required('Password is required')
     .min(8, 'Password is invalid')
@@ -40,7 +42,12 @@ const Login: FC = () => {
       <Center>
         <Box width={'350px'} pt="10vh" px="3">
           <form onSubmit={handleSubmit(onSubmit)}>
-            <InputText id="email" label="Email" register={register} errors={errors} />
+            <InputText
+              id="email"
+              label="Email"
+              register={register}
+              errors={errors}
+            />
             <InputText
               id="password"
               label="Password"
@@ -48,7 +55,11 @@ const Login: FC = () => {
               register={register}
               errors={errors}
             />
-            <Button type="submit" width="full" isLoading={isSubmitting}>
+            <Button
+              type="submit"
+              width="full"
+              isLoading={isSubmitting}
+            >
               Login
             </Button>
           </form>

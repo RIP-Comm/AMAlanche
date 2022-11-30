@@ -1,6 +1,10 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
-import { RouterProvider, createMemoryRouter, RouteObject } from 'react-router-dom';
+import {
+  RouterProvider,
+  createMemoryRouter,
+  RouteObject
+} from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { ChakraProvider } from '@chakra-ui/react';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -22,7 +26,10 @@ describe('Home', () => {
   });
 });
 
-export function createRouterWrapper(route: string, page: RouteObject['element']) {
+export function createRouterWrapper(
+  route: string,
+  page: RouteObject['element']
+) {
   const routes = [
     {
       path: route,

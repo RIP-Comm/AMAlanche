@@ -3,7 +3,10 @@ interface ErrorReducer {
   payload: string;
 }
 
-export const errors = (state = [], { type, payload }: ErrorReducer) => {
+export const errors = (
+  state = [],
+  { type, payload }: ErrorReducer
+) => {
   switch (type) {
     case 'ADD_ERROR':
       return [...state, payload];
