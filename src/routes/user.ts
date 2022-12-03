@@ -4,9 +4,8 @@ import Container from 'typedi';
 import UserService from '../services/user';
 import { CustomError } from '../utils/response/custom-error/CustomError';
 // TODO: example, to de-comment when login is implemented
-// import { checkJwt } from '../middleware/checkJwt';
-// import { checkRole } from '../middleware/checkRole';
-// import { Role } from '../interfaces/user';
+import { checkSession, checkRole } from '../middleware/authHandler';
+import { Role } from '../interfaces/user';
 
 const route = Router();
 
@@ -16,9 +15,8 @@ export default (app: Router) => {
   route.get(
     '/:id',
     [
-      // TODO: example, to de-comment when login is implemented
-      // checkJwt,
-      // checkRole([Role.ADMIN]),
+      checkSession,
+      checkRole([Role.ADMIN, Role.MODERATOR]),
       celebrate({
         [Segments.PARAMS]: Joi.object().keys({
           id: Joi.string().required(),
@@ -46,9 +44,8 @@ export default (app: Router) => {
     route.post(
       '/',
       [
-        // TODO: example, to de-comment when login is implemented
-        // checkJwt,
-        // checkRole([Role.ADMIN]),
+        checkSession,
+        checkRole([Role.ADMIN, Role.MODERATOR]),
         celebrate({
           [Segments.BODY]: Joi.object().keys({
             username: Joi.string().required(),

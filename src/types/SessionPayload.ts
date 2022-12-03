@@ -1,8 +1,8 @@
 import { Role } from '../interfaces/user';
 
-export type JwtPayload = {
-  id: number;
+export type SessionPayload = {
+  id: string;
   email: string;
   role: Role;
-  created_at: Date;
+  createdAt: Date;
 };

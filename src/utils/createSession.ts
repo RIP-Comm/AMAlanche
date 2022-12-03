@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken';
 
-import { JwtPayload } from '../types/JwtPayload';
+import { SessionPayload } from '../types/SessionPayload';
 
-export const createJwtToken = (payload: JwtPayload): string => {
+export const createJwtToken = (payload: SessionPayload): string => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return jwt.sign(payload, process.env.JWT_SECRET!, {
     expiresIn: process.env.JWT_EXPIRATION,
