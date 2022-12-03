@@ -10,8 +10,8 @@
 		"docker:dev": "docker-compose --file docker-compose.yml --file docker-compose.dev.yml --compatibility up --build",
 		"format:check": "prettier --check .",
 		"format:write": "prettier --write .",
-		"lint:check": "eslint . --ext=.ts,.js",
-		"lint:fix": "eslint --fix . --ext=.ts,.js"
+		"lint:check": "eslint ./src --ext=.ts,.js",
+		"lint:fix": "eslint --fix ./src --ext=.ts,.js"
 	},
 	"author": "R.I.P. Community",
 	"license": "",
@@ -47,6 +47,7 @@
 		"jsonwebtoken": "^8.5.1",
 		"lodash": "^4.17.21",
 		"mongoose": "^6.7.2",
+		"mongoose-autopopulate": "^0.16.1",
 		"reflect-metadata": "^0.1.13",
 		"typedi": "^0.10.0",
 		"winston": "^3.3.3"
