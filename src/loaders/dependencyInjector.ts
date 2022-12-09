@@ -1,8 +1,18 @@
 import { Container } from 'typedi';
 import Logger from './logger';
 import { EventDispatcher } from 'event-dispatch';
-export default ({ dbConnection }) => {
+
+export default ({
+  dbConnection,
+  models,
+}: {
+  dbConnection;
+  models: { name: string; model: any }[];
+}) => {
   try {
+    models.forEach((m) => {
+      Container.set(m.name, m.model);
+    });
     //Add here all dependency that have to injected in a service.
     Container.set('database-connection', dbConnection);
     Container.set('logger', Logger);

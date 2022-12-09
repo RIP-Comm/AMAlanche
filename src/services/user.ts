@@ -8,7 +8,7 @@ export default class UserService {
   constructor(@Inject('logger') private logger: Logger) {}
 
   public async get(id: string): Promise<IUser> {
-    const userRecord: IUser = await User.findById<IUser>(id);
+    const userRecord: IUser = await User.findById(id);
     this.logger.info(`user found: ${userRecord._id}`);
     return userRecord;
   }

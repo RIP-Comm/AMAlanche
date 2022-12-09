@@ -8,7 +8,16 @@ export default async ({ expressApp }): Promise<void> => {
   const dbConnection = await mongo();
   Logger.info('Database connection loaded');
 
-  await dependencyInjectorLoader({ dbConnection });
+  const userModel = {
+    name: 'userModel',
+    // Notice the require syntax and the '.default'
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    model: require('../models/user').default,
+  };
+  await dependencyInjectorLoader({
+    dbConnection,
+    models: [userModel],
+  });
   Logger.info('Dependency Injector loaded');
 
   await expressLoader({ app: expressApp });

@@ -3,7 +3,6 @@ export enum Role {
   MODERATOR = 'moderator',
   USER = 'user',
 }
-
 export interface IUser {
   _id: string;
   username: string;
@@ -11,7 +10,7 @@ export interface IUser {
   email: string;
   isVerified: boolean;
   password: string;
-  salt: string;
+  salt?: string;
   createdAt: Date;
 }
 
