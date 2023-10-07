@@ -4,6 +4,7 @@
 - Main Features (high priority)
 
   - [ ] Initialize Frontend (React).
+  - [ ] Pick a CSS library (TailwindCSS) (and) framework (DaisyUI, ChakraUI, ...).
   - [ ] Initialize Backend (Golang, Gin).
   - [ ] Initialize Backend Connection with DB (ORM?).
   - [ ] Authentication (Username Password, OAuth Providers (Google), Anonymous Mode?).
