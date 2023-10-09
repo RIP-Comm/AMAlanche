@@ -1,6 +1,7 @@
 package configs
 
 import (
+	"fmt"
 	"github.com/RIP-Comm/AMAlanche/util"
 	"github.com/spf13/viper"
 	"log"
@@ -67,7 +68,7 @@ func (p *ConfigProvider) loadConfig() {
 	viper.SetConfigFile("resources/properties.yaml")
 	err := viper.ReadInConfig()
 	if err != nil {
-		util.CustomError(err)
+		panic(fmt.Errorf(util.STARTUP_ERROR, err))
 	}
 
 	allSettings := viper.AllKeys()
@@ -80,7 +81,7 @@ func (p *ConfigProvider) loadConfig() {
 
 	err = viper.Unmarshal(&p.Config)
 	if err != nil {
-		util.CustomError(err)
+		panic(fmt.Errorf(util.STARTUP_ERROR, err))
 	}
 }
 
