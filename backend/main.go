@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
+	"net/http"
+
 	"github.com/RIP-Comm/AMAlanche/configs"
 	"github.com/RIP-Comm/AMAlanche/models/entity"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	socketio "github.com/googollee/go-socket.io"
-	"net/http"
 )
 
 func main() {

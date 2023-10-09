@@ -2,12 +2,13 @@ package configs
 
 import (
 	"fmt"
-	"github.com/RIP-Comm/AMAlanche/util"
-	"github.com/spf13/viper"
 	"log"
 	"os"
 	"regexp"
 	"sync"
+
+	"github.com/RIP-Comm/AMAlanche/util"
+	"github.com/spf13/viper"
 )
 
 type Config struct {
@@ -90,7 +91,6 @@ func (p *ConfigProvider) initConfig() {
 }
 
 func loadProperty(propery string) string {
-
 	pattern := `\${([^:]+):([^}]+)}`
 
 	regex := regexp.MustCompile(pattern)

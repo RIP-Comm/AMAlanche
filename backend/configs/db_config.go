@@ -2,11 +2,12 @@ package configs
 
 import (
 	"fmt"
+	"sync"
+
 	"github.com/RIP-Comm/AMAlanche/models/entity"
 	"github.com/RIP-Comm/AMAlanche/util"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
-	"sync"
 )
 
 type DatabaseProvider struct {
@@ -46,7 +47,7 @@ func (p *DatabaseProvider) initDB() {
 
 	p.DB = db
 
-	//migrate
+	// migrate
 	p.migrateDB()
 }
 
