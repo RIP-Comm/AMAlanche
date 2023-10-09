@@ -1,0 +1,19 @@
+# server
+server:
+  port: ${SERVER_PORT:8080}
+
+# database
+database:
+  host: ${DB_HOST:localhost}
+  port: ${DB_PORT:5432}
+  username: ${DB_USERNAME:postgres}
+  password: ${DB_PASSWORD:postgres}
+  db-name: ${DB_NAME:postgres}
+  driver: ${DB_DRIVER:postgres}
+  ssl: ${DB_SSL:disable}
+
+# security
+security:
+  cors:
+    allow-origins: ${SECURITY_CORS_ALLOW_ORIGINS:http://localhost:3000}
+    allow-credentials: ${SECURITY_CORS_ALLOW_CREDENTRIALS:true}
