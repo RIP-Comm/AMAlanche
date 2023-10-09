@@ -1,6 +1,6 @@
 .PHONY: dc-up
 dc-up:
-	@docker-compose up -d
+	@docker-compose -p amalanche -f ./docker-compose.yml up -d
 
 .PHONY: dc-down
 dc-down:
