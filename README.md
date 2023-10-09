@@ -26,3 +26,20 @@
 - (Super) Extra Features (very low priority):
   - [ ] Multi-tenant.
   - [ ] Organization's calendars, events, ...
+
+# Development Backend side
+
+- Install Go :)
+- Install docker + docker-compose
+- Make sure your system can run make commands
+
+### Run BE
+```bash
+make dc-up
+make run-be
+```
+
+### Lint code 
+```bash
+make lint
+```
