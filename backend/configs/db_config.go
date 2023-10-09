@@ -41,7 +41,7 @@ func (p *DatabaseProvider) initDB() {
 
 	db, err := gorm.Open(databaseConfig.Driver, url)
 	if err != nil {
-		util.CustomError(err)
+		panic(fmt.Errorf(util.STARTUP_ERROR, err))
 	}
 
 	p.DB = db
