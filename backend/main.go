@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"github.com/RIP-Comm/AMAlanche/configs"
+	"github.com/RIP-Comm/AMAlanche/models/entity"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	socketio "github.com/googollee/go-socket.io"
@@ -9,12 +11,19 @@ import (
 )
 
 func main() {
+	// load configs
+	serverConfig := configs.GetConfigInstance().Config.Server
+	securityConfig := configs.GetConfigInstance().Config.Security
+
+	// database
+	databaseProvicer := configs.GetDBInstance()
+	fmt.Println(databaseProvicer.DB)
 	router := gin.Default()
 
-	//cors
+	// setup cors
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"http://localhost:3000"}
-	config.AllowCredentials = true
+	config.AllowOrigins = securityConfig.CorsConfig.AllowOrigins
+	config.AllowCredentials = securityConfig.CorsConfig.AllowCredentials
 
 	router.Use(cors.New(config))
 
@@ -39,7 +48,7 @@ func main() {
 	go socketServer.Serve()
 	defer socketServer.Close()
 
-	// controller
+	// controllers
 	router.GET("/socket.io/*any", gin.WrapH(socketServer))
 	router.POST("/socket.io/*any", gin.WrapH(socketServer))
 
@@ -49,6 +58,7 @@ func main() {
 		})
 	})
 
+	// test send socket message
 	router.POST("/send", func(c *gin.Context) {
 		var requestBody struct {
 			Room    string `json:"room"`
@@ -68,6 +78,23 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{"message": "The message has been successfully sent"})
 	})
 
+	// test db add row
+	router.POST("/test-db", func(c *gin.Context) {
+		var requestBody struct {
+			Testo string `json:"testo"`
+		}
+
+		if err := c.BindJSON(&requestBody); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON request"})
+			return
+		}
+
+		newEntity := entity.TestEntity{Testo: requestBody.Testo}
+		databaseProvicer.DB.Create(&newEntity)
+
+		c.JSON(200, gin.H{"message": "Row saved successfully"})
+	})
+
 	// start
-	router.Run(":8080")
+	router.Run(":" + serverConfig.Port)
 }

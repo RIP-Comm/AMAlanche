@@ -6,7 +6,7 @@
   - [X] Initialize Frontend (React).
   - [ ] Pick a CSS library (TailwindCSS) (and) framework (DaisyUI, ChakraUI, ...).
   - [x] Initialize Backend (Golang, Gin).
-  - [ ] Initialize Backend Connection with DB (ORM?).
+  - [x] Initialize Backend Connection with DB with ORM.
   - [ ] Authentication (Username Password, OAuth Providers (Google), Anonymous Mode?).
   - [ ] Implement Channel (Main view with the ability to create new Q/A, Polls, ... ).
   - [ ] Q/A.
