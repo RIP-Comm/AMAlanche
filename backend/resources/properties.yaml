@@ -11,6 +11,7 @@ database:
   db-name: ${DB_NAME:postgres}
   driver: ${DB_DRIVER:postgres}
   ssl: ${DB_SSL:disable}
+  auto-migrate: ${DB_AUTO_MIGRATE:true}
 
 # security
 security:
