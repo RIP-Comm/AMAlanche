@@ -22,13 +22,14 @@ type ServerConfig struct {
 }
 
 type DatabaseConfig struct {
-	Host     string `mapstructure:"host"`
-	Port     string `mapstructure:"port"`
-	Username string `mapstructure:"username"`
-	Password string `mapstructure:"password"`
-	DBName   string `mapstructure:"db-name"`
-	Driver   string `mapstructure:"driver"`
-	Ssl      string `mapstructure:"ssl"`
+	Host        string `mapstructure:"host"`
+	Port        string `mapstructure:"port"`
+	Username    string `mapstructure:"username"`
+	Password    string `mapstructure:"password"`
+	DBName      string `mapstructure:"db-name"`
+	Driver      string `mapstructure:"driver"`
+	Ssl         string `mapstructure:"ssl"`
+	AutoMigrate bool   `mapstructure:"auto-migrate"`
 }
 
 type SecurityConfig struct {

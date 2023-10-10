@@ -2,6 +2,7 @@ package configs
 
 import (
 	"fmt"
+	"log"
 	"sync"
 
 	"github.com/RIP-Comm/AMAlanche/models/entity"
@@ -52,5 +53,11 @@ func (p *DatabaseProvider) initDB() {
 }
 
 func (p *DatabaseProvider) migrateDB() {
-	p.DB.AutoMigrate(&entity.TestEntity{})
+	databaseConfig := GetConfigInstance().Config.Database
+
+	if databaseConfig.AutoMigrate {
+		log.Println("Start auto DB migration")
+		p.DB.AutoMigrate(&entity.TestEntity{})
+		log.Println("End auto DB migration")
+	}
 }
