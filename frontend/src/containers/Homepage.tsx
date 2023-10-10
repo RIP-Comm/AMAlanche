@@ -7,7 +7,7 @@ function Homepage() {
 
 	return (
 		<>
-			<h1>AMAlanche</h1>
+			<h1 className="text-3xl font-bold">AMAlanche</h1>
 			<Stack direction="row" spacing={4} align="center">
 				<Button
 					colorScheme="teal"
