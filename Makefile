@@ -10,7 +10,18 @@ dc-down:
 run-be:
 	@cd backend && go mod tidy && go run ./main.go
 
+.PHONY: run-fe
+run-fe:
+	@cd frontend && npm i && npm start
+
 .PHONY: lint-be
 lint-be:
 	@go install mvdan.cc/gofumpt@latest
 	@gofumpt -l -w .
+
+.PHONY: lint-fe
+lint-fe:
+	@cd frontend && npx prettier --write "**/*.{js,tsx,json}"
+
+.PHONY: lint
+lint: lint-be lint-fe
