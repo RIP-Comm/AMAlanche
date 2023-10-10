@@ -21,7 +21,7 @@ lint-be:
 
 .PHONY: lint-fe
 lint-fe:
-	@cd frontend && npx prettier --write "**/*.{js,tsx,json}"
+	@cd frontend && npx prettier --write .
 
 .PHONY: lint
 lint: lint-be lint-fe
