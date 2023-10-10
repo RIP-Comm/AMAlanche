@@ -33,13 +33,33 @@
 - Install docker + docker-compose
 - Make sure your system can run make commands
 
-### Run BE
+### Run Containers
 ```bash
 make dc-up
+```
+
+### Run BE
+```bash
 make run-be
 ```
 
-### Lint code 
+### Run FE
+```bash
+make run-fe
+```
+
+
+### Lint code
 ```bash
 make lint
+```
+
+#### Lint BE
+```bash
+make lint-be
+```
+
+#### Lint FE
+```bash
+make lint-fe
 ```
