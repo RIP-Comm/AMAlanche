@@ -33,7 +33,9 @@ type DatabaseConfig struct {
 }
 
 type SecurityConfig struct {
-	CorsConfig CorsConfig `mapstructure:"cors"`
+	CorsConfig       CorsConfig `mapstructure:"cors"`
+	RefreshSecretKey string     `mapstructure:"SECRET_KEY"`
+	SecretKey        string     `mapstructure:"SECRET_REFRESH_KEY"`
 }
 
 type CorsConfig struct {

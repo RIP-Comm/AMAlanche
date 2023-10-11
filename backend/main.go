@@ -2,23 +2,21 @@ package main
 
 import (
 	"fmt"
-	"net/http"
-
 	"github.com/RIP-Comm/AMAlanche/configs"
 	"github.com/RIP-Comm/AMAlanche/models/entity"
+	"github.com/RIP-Comm/AMAlanche/routes"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	socketio "github.com/googollee/go-socket.io"
+	"net/http"
 )
 
 func main() {
 	// load configs
 	serverConfig := configs.GetConfigInstance().Config.Server
 	securityConfig := configs.GetConfigInstance().Config.Security
-
 	// database
 	databaseProvicer := configs.GetDBInstance()
-	fmt.Println(databaseProvicer.DB)
 	router := gin.Default()
 
 	// setup cors
@@ -58,6 +56,8 @@ func main() {
 			"message": "pong",
 		})
 	})
+
+	routes.Users(router)
 
 	// test send socket message
 	router.POST("/send", func(c *gin.Context) {

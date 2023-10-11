@@ -61,3 +61,5 @@ deploy/postgres-data
 !.vscode/extensions.json
 .history/*
 backend/AMAlanche
+
+backend/.env
