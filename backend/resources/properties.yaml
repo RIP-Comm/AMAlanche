@@ -18,3 +18,5 @@ security:
   cors:
     allow-origins: ${SECURITY_CORS_ALLOW_ORIGINS:http://localhost:3000}
     allow-credentials: ${SECURITY_CORS_ALLOW_CREDENTRIALS:true}
+  SECRET_KEY: ${SECRET_KEY:secret_access_token}
+  SECRET_REFRESH_KEY: ${SECRET_REFRESH_KEY:secret_refresh_ttoken}
