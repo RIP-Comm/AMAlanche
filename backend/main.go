@@ -4,8 +4,13 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/RIP-Comm/AMAlanche/utils"
+
+	"github.com/RIP-Comm/AMAlanche/models/dto"
+
 	"github.com/RIP-Comm/AMAlanche/configs"
-	"github.com/RIP-Comm/AMAlanche/models/entity"
+	"github.com/RIP-Comm/AMAlanche/controllers"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	socketio "github.com/googollee/go-socket.io"
@@ -17,8 +22,8 @@ func main() {
 	securityConfig := configs.GetConfigInstance().Config.Security
 
 	// database
-	databaseProvicer := configs.GetDBInstance()
-	fmt.Println(databaseProvicer.DB)
+	databaseProvider := configs.GetDBInstance()
+	fmt.Println(databaseProvider.DB)
 	router := gin.Default()
 
 	// setup cors
@@ -50,9 +55,6 @@ func main() {
 	defer socketServer.Close()
 
 	// controllers
-	router.GET("/socket.io/*any", gin.WrapH(socketServer))
-	router.POST("/socket.io/*any", gin.WrapH(socketServer))
-
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",
@@ -67,7 +69,7 @@ func main() {
 		}
 
 		if err := c.BindJSON(&requestBody); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON request"})
+			c.JSON(http.StatusBadRequest, dto.ErrorResponse{Error: utils.BadRequestInvalidJsonMessage})
 			return
 		}
 
@@ -79,22 +81,8 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{"message": "The message has been successfully sent"})
 	})
 
-	// test db add row
-	router.POST("/test-db", func(c *gin.Context) {
-		var requestBody struct {
-			Testo string `json:"testo"`
-		}
-
-		if err := c.BindJSON(&requestBody); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON request"})
-			return
-		}
-
-		newEntity := entity.TestEntity{Testo: requestBody.Testo}
-		databaseProvicer.DB.Create(&newEntity)
-
-		c.JSON(200, gin.H{"message": "Row saved successfully"})
-	})
+	// controllers
+	controllers.SetupAPIRoutes(router)
 
 	// start
 	router.Run(":" + serverConfig.Port)

@@ -6,7 +6,7 @@ import (
 	"sync"
 
 	"github.com/RIP-Comm/AMAlanche/models/entity"
-	"github.com/RIP-Comm/AMAlanche/util"
+	"github.com/RIP-Comm/AMAlanche/utils"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
@@ -43,7 +43,7 @@ func (p *DatabaseProvider) initDB() {
 
 	db, err := gorm.Open(databaseConfig.Driver, url)
 	if err != nil {
-		panic(fmt.Errorf(util.STARTUP_ERROR, err))
+		panic(fmt.Errorf(utils.StartupError, err))
 	}
 
 	p.DB = db
@@ -57,7 +57,7 @@ func (p *DatabaseProvider) migrateDB() {
 
 	if databaseConfig.AutoMigrate {
 		log.Println("Start auto DB migration")
-		p.DB.AutoMigrate(&entity.TestEntity{})
+		p.DB.AutoMigrate(&entity.User{})
 		log.Println("End auto DB migration")
 	}
 }

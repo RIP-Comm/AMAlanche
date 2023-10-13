@@ -18,3 +18,9 @@ security:
   cors:
     allow-origins: ${SECURITY_CORS_ALLOW_ORIGINS:http://localhost:3000}
     allow-credentials: ${SECURITY_CORS_ALLOW_CREDENTRIALS:true}
+  auth:
+    google:
+      client-id: ${SECURITY_AUTH_GOOGLE_CLIENT_ID:client-id}
+      client-secret: ${SECURITY_AUTH_GOOGLE_CLIENT_SECRET:client-secret}
+      redirect-url: ${SECURITY_AUTH_GOOGLE_CLIENT_REDIRECT_URL:http://localhost:3000}
+      scopes: ${SECURITYAUTH__GOOGLE_SCOPES:https://www.googleapis.com/auth/userinfo.email,https://www.googleapis.com/auth/userinfo.profile}

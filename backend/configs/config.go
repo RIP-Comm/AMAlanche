@@ -2,12 +2,12 @@ package configs
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"regexp"
 	"sync"
 
-	"github.com/RIP-Comm/AMAlanche/util"
+	"github.com/RIP-Comm/AMAlanche/utils"
+	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
 )
 
@@ -32,8 +32,13 @@ type DatabaseConfig struct {
 	AutoMigrate bool   `mapstructure:"auto-migrate"`
 }
 
+type AuthConfig struct {
+	GoogleConfig GoogleConfig `mapstructure:"google"`
+}
+
 type SecurityConfig struct {
 	CorsConfig CorsConfig `mapstructure:"cors"`
+	Auth       AuthConfig `mapstructure:"auth"`
 }
 
 type CorsConfig struct {
@@ -41,13 +46,16 @@ type CorsConfig struct {
 	AllowCredentials bool     `mapstructure:"allow-credentials"`
 }
 
+type GoogleConfig struct {
+	ClientID     string   `mapstructure:"client-id"`
+	ClientSecret string   `mapstructure:"client-secret"`
+	RedirectURL  string   `mapstructure:"redirect-url"`
+	Scopes       []string `mapstructure:"scopes"`
+}
+
 type ConfigProvider struct {
 	Config Config
 	once   sync.Once
-}
-
-func init() {
-	log.SetPrefix("[config] ")
 }
 
 var instanceConfig *ConfigProvider
@@ -66,11 +74,15 @@ func GetConfigInstance() *ConfigProvider {
 }
 
 func (p *ConfigProvider) loadConfig() {
+	if err := godotenv.Load(".env"); err != nil {
+		fmt.Println("file .env not found")
+	}
+
 	viper.SetConfigType("yaml")
 	viper.SetConfigFile("resources/properties.yaml")
 	err := viper.ReadInConfig()
 	if err != nil {
-		panic(fmt.Errorf(util.STARTUP_ERROR, err))
+		panic(fmt.Errorf(utils.StartupError, err))
 	}
 
 	allSettings := viper.AllKeys()
@@ -83,7 +95,7 @@ func (p *ConfigProvider) loadConfig() {
 
 	err = viper.Unmarshal(&p.Config)
 	if err != nil {
-		panic(fmt.Errorf(util.STARTUP_ERROR, err))
+		panic(fmt.Errorf(utils.StartupError, err))
 	}
 }
 
