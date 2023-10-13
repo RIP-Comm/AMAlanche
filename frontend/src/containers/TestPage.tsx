@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { SocketProvider } from '../utils/SocketProvider';
+import React from 'react';
+import { SocketProvider } from '../providers/SocketProvider';
 
 function TestPage() {
 	return (

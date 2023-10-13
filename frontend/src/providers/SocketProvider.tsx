@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect, useState } from 'react';
-import { Message } from './types/Socket.types';
-import { SOCKET_URL } from './Env';
+import { Message } from '../utils/types/Socket.types';
+import { SOCKET_URL } from '../utils/Env';
 import io from 'socket.io-client';
 
 export const SocketProvider = ({ children }: { children: ReactNode }) => {
