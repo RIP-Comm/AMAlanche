@@ -1,14 +1,14 @@
 import React, { ReactNode, useEffect, useState } from 'react';
-import { Message } from './types/Socket.types';
-import { SOCKET_URL } from './Env';
+import { Message } from '../utils/types/Socket.types';
+import { API_BASE_URL } from '../utils/Env';
 import io from 'socket.io-client';
 
 export const SocketProvider = ({ children }: { children: ReactNode }) => {
 	const [messages, setMessages] = useState<Message[]>([]);
 
 	useEffect(() => {
-		if (SOCKET_URL) {
-			const newSocket = io(SOCKET_URL);
+		if (API_BASE_URL) {
+			const newSocket = io(API_BASE_URL);
 
 			newSocket.on('connect', () => {
 				newSocket.emit('join', 'room');
