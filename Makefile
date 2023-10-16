@@ -25,3 +25,7 @@ lint-fe:
 
 .PHONY: lint
 lint: lint-be lint-fe
+
+.PHONY: swagger
+generate-swagger:
+	@cd backend && swag init --parseDependency --parseInternal

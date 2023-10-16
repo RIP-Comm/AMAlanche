@@ -17,6 +17,14 @@ database:
 security:
   cors:
     allow-origins: ${SECURITY_CORS_ALLOW_ORIGINS:http://localhost:3000}
-    allow-credentials: ${SECURITY_CORS_ALLOW_CREDENTRIALS:true}
-  SECRET_KEY: ${SECRET_KEY:secret_access_token}
-  SECRET_REFRESH_KEY: ${SECRET_REFRESH_KEY:secret_refresh_ttoken}
+    allow-credentials: ${SECURITY_CORS_ALLOW_CREDENTIALS:true}
+    allow-headers: ${SECURITY_CORS_ALLOW_HEADERS:Content-Type,Authorization,AuthType}
+  auth:
+    internal:
+      secret-key: ${SECURITY_AUTH_INTERNAL_SECRET_KEY:secret_access_token}
+      secret-refresh-key: ${SECURITY_AUTH_INTERNAL_SECRET_REFRESH_KEY:secret_refresh_token}
+    google:
+      client-id: ${SECURITY_AUTH_GOOGLE_CLIENT_ID:client-id}
+      client-secret: ${SECURITY_AUTH_GOOGLE_CLIENT_SECRET:client-secret}
+      redirect-url: ${SECURITY_AUTH_GOOGLE_CLIENT_REDIRECT_URL:http://localhost:3000}
+      scopes: ${SECURITY_AUTH_GOOGLE_SCOPES:https://www.googleapis.com/auth/userinfo.email,https://www.googleapis.com/auth/userinfo.profile}

@@ -2,27 +2,40 @@ package main
 
 import (
 	"fmt"
+	"net/http"
+
+	"github.com/RIP-Comm/AMAlanche/utils/ex"
+
+	"github.com/RIP-Comm/AMAlanche/models/dto"
+
 	"github.com/RIP-Comm/AMAlanche/configs"
-	"github.com/RIP-Comm/AMAlanche/models/entity"
-	"github.com/RIP-Comm/AMAlanche/routes"
+	"github.com/RIP-Comm/AMAlanche/controllers"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	socketio "github.com/googollee/go-socket.io"
-	"net/http"
 )
 
+// @title 			AMAlanche
+// @version			0.0.1-SNAPSHOT
+// @description 	:)
+// @host 			localhost:8080
+// @BasePath 		/api
 func main() {
-	// load configs
+	// load config
 	serverConfig := configs.GetConfigInstance().Config.Server
-	securityConfig := configs.GetConfigInstance().Config.Security
-	// database
-	databaseProvicer := configs.GetDBInstance()
+	securityCors := configs.GetConfigInstance().Config.Security.CorsConfig
+
+	// load db
+	_ = configs.GetDBInstance()
+
 	router := gin.Default()
 
 	// setup cors
 	config := cors.DefaultConfig()
-	config.AllowOrigins = securityConfig.CorsConfig.AllowOrigins
-	config.AllowCredentials = securityConfig.CorsConfig.AllowCredentials
+	config.AllowOrigins = securityCors.AllowOrigins
+	config.AllowCredentials = securityCors.AllowCredentials
+	config.AllowHeaders = securityCors.AllowHeaders
 
 	router.Use(cors.New(config))
 
@@ -57,8 +70,6 @@ func main() {
 		})
 	})
 
-	routes.Users(router)
-
 	// test send socket message
 	router.POST("/send", func(c *gin.Context) {
 		var requestBody struct {
@@ -67,7 +78,7 @@ func main() {
 		}
 
 		if err := c.BindJSON(&requestBody); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON request"})
+			c.JSON(http.StatusBadRequest, dto.ErrorResponse{Error: ex.BadRequestInvalidJsonMessage})
 			return
 		}
 
@@ -79,22 +90,8 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{"message": "The message has been successfully sent"})
 	})
 
-	// test db add row
-	router.POST("/test-db", func(c *gin.Context) {
-		var requestBody struct {
-			Testo string `json:"testo"`
-		}
-
-		if err := c.BindJSON(&requestBody); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON request"})
-			return
-		}
-
-		newEntity := entity.TestEntity{Testo: requestBody.Testo}
-		databaseProvicer.DB.Create(&newEntity)
-
-		c.JSON(200, gin.H{"message": "Row saved successfully"})
-	})
+	// init router
+	controllers.SetupAPIRoutes(router)
 
 	// start
 	router.Run(":" + serverConfig.Port)
