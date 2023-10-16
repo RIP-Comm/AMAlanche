@@ -1,4 +1,7 @@
 #BE
+backend/AMAlanche
+backend/.env
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
@@ -60,6 +63,3 @@ deploy/postgres-data
 !.vscode/launch.json
 !.vscode/extensions.json
 .history/*
-backend/AMAlanche
-
-backend/.env

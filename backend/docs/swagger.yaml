@@ -1,0 +1,309 @@
+basePath: /api
+definitions:
+  dto.AuthGoogleLoginRequest:
+    properties:
+      code:
+        type: string
+    required:
+    - code
+    type: object
+  dto.AuthGoogleRefreshRequest:
+    properties:
+      refreshToken:
+        type: string
+    required:
+    - refreshToken
+    type: object
+  dto.AuthGoogleTokenResponse:
+    properties:
+      accessToken:
+        type: string
+      expiry:
+        type: string
+      refreshToken:
+        type: string
+      userId:
+        type: integer
+    type: object
+  dto.AuthInternalLoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  dto.AuthInternalLoginResponse:
+    properties:
+      accessToken:
+        type: string
+      expiry:
+        type: string
+      userId:
+        type: integer
+    type: object
+  dto.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  dto.UserCreateRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - email
+    - password
+    - username
+    type: object
+  dto.UserResponse:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      username:
+        type: string
+    type: object
+  dto.UserUpdateRequest:
+    properties:
+      username:
+        type: string
+    required:
+    - username
+    type: object
+  entity.User:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      password:
+        type: string
+      role:
+        type: string
+      updatedAt:
+        type: string
+      username:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: :)
+  title: AMAlanche
+  version: 0.0.1-SNAPSHOT
+paths:
+  /auth/google-login:
+    post:
+      consumes:
+      - application/json
+      description: Perform Google login using an authorization code and return an
+        access token.
+      parameters:
+      - description: Google login request
+        in: body
+        name: requestBody
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AuthGoogleLoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully generated Google access token
+          schema:
+            $ref: '#/definitions/dto.AuthGoogleTokenResponse'
+        "400":
+          description: Invalid JSON request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Perform Google login using authorization code
+      tags:
+      - Auth
+  /auth/google-refresh:
+    post:
+      consumes:
+      - application/json
+      description: Update a Google access token using a refresh token and return the
+        new access token.
+      parameters:
+      - description: Google access token refresh request
+        in: body
+        name: refreshRequest
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AuthGoogleRefreshRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully updated Google access token
+          schema:
+            $ref: '#/definitions/dto.AuthGoogleTokenResponse'
+        "400":
+          description: Invalid JSON request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Update a Google access token using a refresh token
+      tags:
+      - Auth
+  /auth/internal-login:
+    post:
+      consumes:
+      - application/json
+      description: Perform internal login using credentials and return an access token.
+      parameters:
+      - description: Internal login request
+        in: body
+        name: requestBody
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AuthInternalLoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully generated internal access token
+          schema:
+            $ref: '#/definitions/dto.AuthInternalLoginResponse'
+        "400":
+          description: Invalid JSON request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "401":
+          description: Invalid credentials
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Perform internal login using credentials
+      tags:
+      - Auth
+  /user:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new user with the provided details.
+      parameters:
+      - description: User creation request
+        in: body
+        name: requestBody
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UserCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User created successfully
+          schema:
+            $ref: '#/definitions/entity.User'
+        "400":
+          description: Invalid JSON request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Create a new user
+      tags:
+      - User
+  /user/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves user information based on the provided user ID.
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User information retrieved successfully
+          schema:
+            $ref: '#/definitions/dto.UserResponse'
+        "400":
+          description: Invalid or missing ID
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Retrieve user information by ID
+      tags:
+      - User
+    put:
+      consumes:
+      - application/json
+      description: Updates user information based on the provided user ID and request
+        details.
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: User update request
+        in: body
+        name: requestBody
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UserUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User information updated successfully
+          schema:
+            $ref: '#/definitions/dto.UserResponse'
+        "400":
+          description: Invalid or missing ID or JSON request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "403":
+          description: Forbidden action
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Update user information by ID
+      tags:
+      - User
+swagger: "2.0"

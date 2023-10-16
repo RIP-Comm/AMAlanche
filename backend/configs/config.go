@@ -2,12 +2,13 @@ package configs
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"regexp"
 	"sync"
 
-	"github.com/RIP-Comm/AMAlanche/util"
+	"github.com/RIP-Comm/AMAlanche/utils/ex"
+
+	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
 )
 
@@ -32,24 +33,37 @@ type DatabaseConfig struct {
 	AutoMigrate bool   `mapstructure:"auto-migrate"`
 }
 
+type InternalConfig struct {
+	RefreshSecretKey string `mapstructure:"secret-refresh-key"`
+	SecretKey        string `mapstructure:"secret-key"`
+}
+
+type GoogleConfig struct {
+	ClientID     string   `mapstructure:"client-id"`
+	ClientSecret string   `mapstructure:"client-secret"`
+	RedirectURL  string   `mapstructure:"redirect-url"`
+	Scopes       []string `mapstructure:"scopes"`
+}
+
+type AuthConfig struct {
+	InternalConfig InternalConfig `mapstructure:"internal"`
+	GoogleConfig   GoogleConfig   `mapstructure:"google"`
+}
+
 type SecurityConfig struct {
-	CorsConfig       CorsConfig `mapstructure:"cors"`
-	RefreshSecretKey string     `mapstructure:"SECRET_KEY"`
-	SecretKey        string     `mapstructure:"SECRET_REFRESH_KEY"`
+	CorsConfig CorsConfig `mapstructure:"cors"`
+	Auth       AuthConfig `mapstructure:"auth"`
 }
 
 type CorsConfig struct {
 	AllowOrigins     []string `mapstructure:"allow-origins"`
 	AllowCredentials bool     `mapstructure:"allow-credentials"`
+	AllowHeaders     []string `mapstructure:"allow-headers"`
 }
 
 type ConfigProvider struct {
 	Config Config
 	once   sync.Once
-}
-
-func init() {
-	log.SetPrefix("[config] ")
 }
 
 var instanceConfig *ConfigProvider
@@ -68,11 +82,15 @@ func GetConfigInstance() *ConfigProvider {
 }
 
 func (p *ConfigProvider) loadConfig() {
+	// load .env if exist
+	godotenv.Load(".env")
+
+	// load properties.yaml
 	viper.SetConfigType("yaml")
 	viper.SetConfigFile("resources/properties.yaml")
 	err := viper.ReadInConfig()
 	if err != nil {
-		panic(fmt.Errorf(util.STARTUP_ERROR, err))
+		panic(fmt.Errorf(ex.StartupError, err))
 	}
 
 	allSettings := viper.AllKeys()
@@ -85,7 +103,7 @@ func (p *ConfigProvider) loadConfig() {
 
 	err = viper.Unmarshal(&p.Config)
 	if err != nil {
-		panic(fmt.Errorf(util.STARTUP_ERROR, err))
+		panic(fmt.Errorf(ex.StartupError, err))
 	}
 }
 
