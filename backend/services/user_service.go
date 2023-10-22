@@ -7,7 +7,6 @@ import (
 	"github.com/RIP-Comm/AMAlanche/utils/mappers"
 
 	"github.com/RIP-Comm/AMAlanche/utils/ex"
-	"github.com/gin-gonic/gin"
 	"github.com/lib/pq"
 
 	"github.com/RIP-Comm/AMAlanche/models/dto"
@@ -19,6 +18,7 @@ import (
 
 func GetUserById(id uint) (entity.User, *ex.CustomError) {
 	db := configs.GetDBInstance().DB
+
 	var user entity.User
 	if err := db.First(&user, id).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -65,6 +65,7 @@ func GetUserByEmail(email string) (entity.User, *ex.CustomError) {
 	return user, &ex.NoError
 }
 
+// create a new record
 func CreateUser(user entity.User) (entity.User, *ex.CustomError) {
 	db := configs.GetDBInstance().DB
 	if err := db.Create(&user).Error; err != nil {
@@ -85,9 +86,10 @@ func CreateUser(user entity.User) (entity.User, *ex.CustomError) {
 	return user, &ex.NoError
 }
 
+// updates an existing record
 func saveUser(userDto dto.UserUpdateRequest, user *entity.User) *ex.CustomError {
 	db := configs.GetDBInstance().DB
-	mappers.MapUserDTOToEntity(userDto, user)
+	mappers.MapUserUpdateDTOToEntity(userDto, user)
 	if err := db.Save(&user).Error; err != nil {
 		var pqErr *pq.Error
 		if errors.As(err, &pqErr) && pqErr.Code == "23505" {
@@ -105,19 +107,10 @@ func saveUser(userDto dto.UserUpdateRequest, user *entity.User) *ex.CustomError 
 	return &ex.NoError
 }
 
-func UpdateUser(id uint, userDto dto.UserUpdateRequest, c *gin.Context) (entity.User, *ex.CustomError) {
-	authenticatedUserId := c.MustGet("authenticatedUserId").(uint)
-
+func UpdateUser(id uint, userDto dto.UserUpdateRequest) (entity.User, *ex.CustomError) {
 	user, customError := GetUserById(id)
 	if customError != &ex.NoError {
 		return user, customError
-	}
-
-	if authenticatedUserId != user.ID {
-		return user, &ex.CustomError{
-			Code:    ex.ForbiddenCode,
-			Message: ex.ForbiddenMessage,
-		}
 	}
 
 	customError = saveUser(userDto, &user)
@@ -149,4 +142,23 @@ func GetFirstValidUsername(username *string) ex.CustomError {
 	}
 
 	return ex.NoError
+}
+
+func userAddChannel(channel *entity.Channel, user *entity.User) *ex.CustomError {
+	db := configs.GetDBInstance().DB
+
+	user.Channels = append([]entity.Channel{*channel}, user.Channels...)
+
+	if err := db.Save(&user).Error; err != nil {
+		return &ex.CustomError{
+			Code:    ex.GenericCode,
+			Message: fmt.Sprintf(ex.GenericErrorMessage, err),
+		}
+	}
+
+	// update channel id
+	channelId := user.Channels[len(user.Channels)-1].ID
+	channel.ID = channelId
+
+	return &ex.NoError
 }
