@@ -2,11 +2,11 @@ import React from 'react';
 import { useGoogleLogin } from '@react-oauth/google';
 import { GOOGLE_CLIENT_ID } from '../utils/Env';
 import { Button, Flex } from '@chakra-ui/react';
-import store from '../utils/redux/store';
-import { googleLogIn } from '../utils/axios/auth.axios';
+import store from '../utils/redux/Store';
+import { googleLogIn } from '../utils/axios/Auth.axios';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { AppState } from '../utils/redux/actions';
+import { AppState } from '../utils/redux/Actions';
 
 function LoginPage() {
 	const isAuthenticated = useSelector((state: AppState) => state.auth.isAuthenticated);

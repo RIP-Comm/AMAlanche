@@ -4,11 +4,11 @@ import {
 	AuthGoogleRefreshRequest,
 	AuthGoogleResponse,
 } from '../types/Auth.types';
-import store from '../redux/store';
-import { logIn, logOut } from '../redux/actions';
+import store from '../redux/Store';
+import { logIn, logOut } from '../redux/Actions';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { getUser } from './user.axios';
-import { axiosInstance } from './axios';
+import { axiosInstance } from './Axios';
+import { refreshAllUserData } from '../redux/User.actions';
 
 const authBasePath = '/auth';
 
@@ -22,7 +22,7 @@ export const googleLogIn = createAsyncThunk(
 		);
 
 		dispatch(logIn(response.data));
-		dispatch(getUser(response.data.userId));
+		dispatch(refreshAllUserData(response.data.userId));
 	},
 );
 
@@ -50,7 +50,7 @@ export const googleRefresh = createAsyncThunk('auth/google/refresh', async (Void
 
 			const userId = localStorage.getItem('userId');
 			if (userId) {
-				dispatch(getUser(userId));
+				dispatch(refreshAllUserData(userId));
 			} else {
 				console.error('UserId not found in localstorage');
 			}

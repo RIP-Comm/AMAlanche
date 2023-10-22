@@ -1,6 +1,6 @@
 import React from 'react';
-import store from '../utils/redux/store';
-import { AppState, logOut } from '../utils/redux/actions';
+import store from '../utils/redux/Store';
+import { AppState, logOut } from '../utils/redux/Actions';
 import { Button, Flex, Link } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
 import { SettingsIcon } from '@chakra-ui/icons';

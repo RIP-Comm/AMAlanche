@@ -1,9 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AuthGoogleResponse } from '../types/Auth.types';
-import { getUser, putUser } from '../axios/user.axios';
+import { getUser, putUser } from '../axios/User.axios';
 import { User } from '../types/User.types';
-import { googleLogIn, googleRefresh } from '../axios/auth.axios';
-import { axiosInstance } from '../axios/axios';
+import { googleLogIn, googleRefresh } from '../axios/Auth.axios';
+import { axiosInstance } from '../axios/Axios';
+import { Channel } from '../types/Channel.types';
+import { createAllUserChannels, getAllUserChannels } from '../axios/User.channel.axios';
 
 export interface AuthState {
 	isAuthenticated: boolean;
@@ -14,6 +16,7 @@ export interface AuthState {
 export interface AppState {
 	auth: AuthState;
 	user: User | null;
+	channels: Channel[];
 	isLoading: boolean;
 }
 
@@ -24,6 +27,7 @@ const initialState: AppState = {
 		expiry: '',
 	},
 	user: null,
+	channels: [],
 	isLoading: false,
 };
 
@@ -112,6 +116,29 @@ export const dataSlice = createSlice({
 					user: action.payload,
 					isLoading: false,
 				};
+			})
+			.addCase(getAllUserChannels.pending, (state) => {
+				return {
+					...state,
+					isLoading: true,
+				};
+			})
+			.addCase(getAllUserChannels.fulfilled, (state, action: PayloadAction<Channel[]>) => {
+				return {
+					...state,
+					channels: action.payload,
+					isLoading: false,
+				};
+			})
+			.addCase(createAllUserChannels.pending, (state) => {
+				return {
+					...state,
+					isLoading: true,
+				};
+			})
+			.addCase(createAllUserChannels.fulfilled, (state, action: PayloadAction<Channel>) => {
+				state.channels.push(action.payload);
+				state.isLoading = false;
 			});
 	},
 });

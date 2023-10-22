@@ -1,6 +1,6 @@
-import { dataSlice } from './actions';
+import { dataSlice } from './Actions';
 import { configureStore } from '@reduxjs/toolkit';
-import refreshTokenMiddleware from './middlewares/refreshTokenMiddleware';
+import refreshTokenMiddleware from './middlewares/RefreshTokenMiddleware';
 
 const store = configureStore({
 	reducer: dataSlice.reducer,
