@@ -28,12 +28,14 @@ const (
 
 // Generic message fields
 var (
-	IdNotFoundMessage = fmt.Sprintf(NotFoundMessage, "ID")
+	UserIdNotFoundMessage    = fmt.Sprintf(NotFoundMessage, "UserId")
+	ChannelIdNotFoundMessage = fmt.Sprintf(NotFoundMessage, "ChannelId")
 )
 
 // Resources
 const (
-	UserResource = "User"
+	UserResource    = "User"
+	ChannelResource = "Channel"
 )
 
 // Errors
@@ -56,4 +58,10 @@ var NoError = CustomError{
 var UserNotFound = CustomError{
 	Code:    NotFoundCode,
 	Message: fmt.Sprintf(NotFoundMessage, UserResource),
+}
+
+// Channel ex
+var ChannelNotFound = CustomError{
+	Code:    NotFoundCode,
+	Message: fmt.Sprintf(NotFoundMessage, ChannelResource),
 }
