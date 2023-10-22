@@ -1,12 +1,21 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { Flex } from '@chakra-ui/react';
+import { useSelector } from 'react-redux';
+import { AppState } from '../utils/redux/Actions';
+import { Channel, CreateChannel } from '../utils/types/Channel.types';
 
-function ChannelContainer() {
+const ChannelContainer = () => {
+	let { channelId } = useParams();
+	const channel: Channel | undefined = useSelector(
+		(state: AppState) => state.channels?.find((item: Channel) => item.id == channelId),
+	);
+
 	return (
-		<Flex justify="between" align="center" px={4}>
-			<h1 className="text-3xl font-bold">Channels</h1>
+		<Flex direction="column" flexWrap="wrap">
+			<h1 className="text-3xl font-bold">{channel?.name}</h1>
 		</Flex>
 	);
-}
+};
 
 export default ChannelContainer;

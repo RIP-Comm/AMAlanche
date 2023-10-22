@@ -9,9 +9,9 @@ import {
 	Stack,
 } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
-import { AppState } from '../utils/redux/actions';
-import store from '../utils/redux/store';
-import { putUser } from '../utils/axios/user.axios';
+import { AppState } from '../utils/redux/Actions';
+import store from '../utils/redux/Store';
+import { putUser } from '../utils/axios/User.axios';
 import { UpdateUserRequest } from '../utils/types/User.types';
 
 interface FormData {
@@ -69,7 +69,7 @@ function ProfileContainer() {
 
 		if (validateForm()) {
 			const updatedUser: UpdateUserRequest = {
-				id: store.getState().user?.id || 0,
+				id: store.getState().user?.id || '0',
 				username: formData.username,
 			};
 			store.dispatch(putUser(updatedUser)).then((result: any) => {

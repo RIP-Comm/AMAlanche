@@ -1,5 +1,5 @@
 import { Middleware } from 'redux';
-import { googleRefresh } from '../../axios/auth.axios';
+import { googleRefresh } from '../../axios/Auth.axios';
 
 const refreshTokenMiddleware: Middleware = (store) => (next) => (action) => {
 	const state = store.getState();
