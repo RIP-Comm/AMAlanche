@@ -1,24 +1,11 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button, Stack } from '@chakra-ui/react';
+import { Stack } from '@chakra-ui/react';
 
 function HomePage() {
-	let navigate = useNavigate();
-
 	return (
-		<>
-			<Stack direction="row" spacing={4} align="center">
-				<Button
-					colorScheme="teal"
-					variant="solid"
-					onClick={() => {
-						navigate('/socket');
-					}}
-				>
-					Navigate Socket Test Page
-				</Button>
-			</Stack>
-		</>
+		<Stack direction="row" spacing={4} align="center">
+			<h1 className="text-3xl font-bold">Home page</h1>
+		</Stack>
 	);
 }
 

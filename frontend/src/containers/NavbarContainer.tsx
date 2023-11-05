@@ -1,7 +1,7 @@
 import React from 'react';
 import store from '../utils/redux/Store';
-import { AppState, logOut } from '../utils/redux/Actions';
-import { Button, Flex, Link } from '@chakra-ui/react';
+import { AppState, logOut } from '../utils/redux/actions/Actions';
+import { Button, Center, Divider, Flex, Link } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
 import { SettingsIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
@@ -23,9 +23,16 @@ function NavbarContainer() {
 			<Link href="/" p={2} className="text-3xl font-bold">
 				AMAlanche
 			</Link>
-			<Link href="/app" p={2} className="text-2xl">
-				App
-			</Link>
+			{isAuthenticated ? (
+				<>
+					<Center height="50px">
+						<Divider orientation="vertical" />
+					</Center>
+					<Link href="/app" p={2} className="text-2xl">
+						App
+					</Link>
+				</>
+			) : null}
 			<Flex justifyContent="space-between" align="center" ml="auto" w="8rem">
 				{!isAuthenticated ? (
 					<Button onClick={handleLogin}>Login</Button>

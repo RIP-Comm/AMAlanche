@@ -9,10 +9,10 @@ import {
 	Stack,
 } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
-import { AppState } from '../utils/redux/Actions';
+import { AppState } from '../utils/redux/actions/Actions';
 import store from '../utils/redux/Store';
-import { putUser } from '../utils/axios/User.axios';
 import { UpdateUserRequest } from '../utils/types/User.types';
+import { putUser } from '../utils/redux/actions/User.actions';
 
 interface FormData {
 	email: string;
@@ -77,6 +77,8 @@ function ProfileContainer() {
 					setErrors({ username: null });
 				} else if (result.error.message.includes('409')) {
 					setErrors({ username: 'Username is already in use' });
+				} else {
+					setErrors({ username: result.payload.data.error });
 				}
 			});
 		}

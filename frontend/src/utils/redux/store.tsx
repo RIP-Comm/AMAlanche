@@ -1,4 +1,4 @@
-import { dataSlice } from './Actions';
+import { dataSlice } from './actions/Actions';
 import { configureStore } from '@reduxjs/toolkit';
 import refreshTokenMiddleware from './middlewares/RefreshTokenMiddleware';
 

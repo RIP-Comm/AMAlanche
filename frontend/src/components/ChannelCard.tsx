@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Card, CardBody, Text } from '@chakra-ui/react';
+import { Card, CardBody, Tag, TagLabel, Text } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { Channel } from '../utils/types/Channel.types';
 
@@ -26,17 +26,17 @@ const ChannelCard: React.FC<ChannelCardProps> = ({ channel }) => {
 			<CardBody onClick={() => navigate('channel/' + channel.id)}>
 				<Text>{channel.name}</Text>
 				{isOwner ? (
-					<Text
+					<Tag
 						position="absolute"
 						top="0"
 						right="0"
-						backgroundColor="red"
-						color="white"
 						padding="2px 4px"
-						borderRadius="md"
+						size="lg"
+						colorScheme="red"
+						borderRadius="full"
 					>
-						{isOwner ? 'Owner' : 'Not Owner'}
-					</Text>
+						<TagLabel>Owner</TagLabel>
+					</Tag>
 				) : null}
 			</CardBody>
 		</Card>
