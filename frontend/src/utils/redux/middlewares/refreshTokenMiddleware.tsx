@@ -1,24 +1,32 @@
 import { Middleware } from 'redux';
-import { googleRefresh } from '../../axios/Auth.axios';
+import { googleRefresh } from '../actions/Auth.axios';
+import { MiddlewareAPI } from '@reduxjs/toolkit';
 
-const refreshTokenMiddleware: Middleware = (store) => (next) => (action) => {
-	const state = store.getState();
+const refreshTokenMiddleware: Middleware =
+	({ getState, dispatch }: MiddlewareAPI) =>
+	(next) =>
+	(action) => {
+		const state = getState();
 
-	if (state.auth.isAuthenticated) {
-		const currentTime = Date.now() / 1000;
-		const expiryTimeStr = state.auth.expiry;
-		if (expiryTimeStr) {
-			const expiryTime = new Date(expiryTimeStr).getTime() / 1000;
-			if (expiryTime * 0.8 > currentTime) {
-				if (localStorage.getItem('authType') === 'google') {
-					googleRefresh()(store.dispatch, state, null);
+		if (action.type.includes('fulfilled') || action.type.includes('rejected')) {
+			return next(action);
+		}
+
+		if (state.auth.isAuthenticated) {
+			const currentTime = Date.now() / 1000;
+			const expiryTimeStr = state.auth.expiry;
+			if (expiryTimeStr) {
+				const expiryTime = new Date(expiryTimeStr).getTime() / 1000;
+				if (expiryTime * 0.8 > currentTime) {
+					if (localStorage.getItem('AuthType') === 'google') {
+						return dispatch(googleRefresh() as any).then(() => {
+							return next(action);
+						});
+					}
 				}
 			}
 		}
-	}
-
-	const result = next(action);
-	return result;
-};
+		return next(action);
+	};
 
 export default refreshTokenMiddleware;

@@ -3,10 +3,10 @@ import { useGoogleLogin } from '@react-oauth/google';
 import { GOOGLE_CLIENT_ID } from '../utils/Env';
 import { Button, Flex } from '@chakra-ui/react';
 import store from '../utils/redux/Store';
-import { googleLogIn } from '../utils/axios/Auth.axios';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { AppState } from '../utils/redux/Actions';
+import { AppState, setBeforeLogin } from '../utils/redux/actions/Actions';
+import { googleLogIn } from '../utils/redux/actions/Auth.axios';
 
 function LoginPage() {
 	const isAuthenticated = useSelector((state: AppState) => state.auth.isAuthenticated);
@@ -16,7 +16,13 @@ function LoginPage() {
 		onSuccess: async (response) => {
 			store.dispatch(googleLogIn(response.code)).then((result) => {
 				if (result.meta.requestStatus === 'fulfilled') {
-					navigate('/app');
+					const beforeUrl = store.getState().beforeLoginUrl;
+					if (beforeUrl) {
+						store.dispatch(setBeforeLogin(null));
+						navigate(beforeUrl, { replace: true });
+					} else {
+						navigate('/app');
+					}
 				}
 			});
 		},

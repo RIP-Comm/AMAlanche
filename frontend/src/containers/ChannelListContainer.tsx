@@ -1,25 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
 	Button,
-	Card,
-	CardBody,
 	Flex,
 	FormControl,
 	FormErrorMessage,
 	FormLabel,
 	Input,
 	Stack,
-	Text,
 } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
-import { AppState } from '../utils/redux/Actions';
-import { useNavigate } from 'react-router-dom';
+import { AppState } from '../utils/redux/actions/Actions';
 import ChannelCard from '../components/ChannelCard';
-import { UpdateUserRequest } from '../utils/types/User.types';
 import store from '../utils/redux/Store';
-import { putUser } from '../utils/axios/User.axios';
 import { CreateChannel } from '../utils/types/Channel.types';
-import { createAllUserChannels } from '../utils/axios/User.channel.axios';
+import { createChannels } from '../utils/redux/actions/Channel.axios';
 
 interface FormDataValidate {
 	name: string | null;
@@ -56,20 +50,19 @@ function ChannelListContainer() {
 			const newChannel: CreateChannel = {
 				name: formData.name,
 			};
-			store.dispatch(createAllUserChannels(newChannel)).then((result: any) => {
+			store.dispatch(createChannels(newChannel)).then((result: any) => {
 				if (result.error == null) {
 					setFormData({ ...formData, name: '' });
 					setErrors({ name: null });
 				} else {
-					setErrors({ name: result.error.message() });
+					setErrors({ name: result.payload.data.error });
 				}
 			});
 		}
 	};
 
 	return (
-		<>
-			<br />
+		<Flex direction="column" flexWrap="nowrap">
 			<form onSubmit={handleSubmit}>
 				<Stack direction="column" spacing={4}>
 					<FormControl isRequired isInvalid={!!errors.name}>
@@ -95,7 +88,7 @@ function ChannelListContainer() {
 				<h1 className="text-3xl font-bold">Channels:</h1>
 				{channels?.map((channel) => <ChannelCard key={channel.id} channel={channel} />)}
 			</Flex>
-		</>
+		</Flex>
 	);
 }
 
