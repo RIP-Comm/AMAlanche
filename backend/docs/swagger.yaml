@@ -5,14 +5,14 @@ definitions:
       code:
         type: string
     required:
-    - code
+      - code
     type: object
   dto.AuthGoogleRefreshRequest:
     properties:
       refreshToken:
         type: string
     required:
-    - refreshToken
+      - refreshToken
     type: object
   dto.AuthGoogleTokenResponse:
     properties:
@@ -32,8 +32,8 @@ definitions:
       username:
         type: string
     required:
-    - password
-    - username
+      - password
+      - username
     type: object
   dto.AuthInternalLoginResponse:
     properties:
@@ -49,7 +49,7 @@ definitions:
       name:
         type: string
     required:
-    - name
+      - name
     type: object
   dto.ChannelCreateResponse:
     properties:
@@ -74,6 +74,32 @@ definitions:
       error:
         type: string
     type: object
+  dto.QaCreateRequest:
+    properties:
+      parentId:
+        type: integer
+      question:
+        type: string
+    required:
+      - question
+    type: object
+  dto.QaResponse:
+    properties:
+      channelId:
+        type: integer
+      children:
+        items:
+          $ref: '#/definitions/dto.QaResponse'
+        type: array
+      id:
+        type: integer
+      ownerId:
+        type: integer
+      question:
+        type: string
+      username:
+        type: string
+    type: object
   dto.UserCreateRequest:
     properties:
       email:
@@ -83,9 +109,9 @@ definitions:
       username:
         type: string
     required:
-    - email
-    - password
-    - username
+      - email
+      - password
+      - username
     type: object
   dto.UserResponse:
     properties:
@@ -101,7 +127,7 @@ definitions:
       username:
         type: string
     required:
-    - username
+      - username
     type: object
   entity.Channel:
     properties:
@@ -119,8 +145,37 @@ definitions:
         type: string
       ownerId:
         type: integer
+      qas:
+        items:
+          $ref: '#/definitions/entity.Qa'
+        type: array
       updatedAt:
         type: string
+    type: object
+  entity.Qa:
+    properties:
+      channelId:
+        type: integer
+      children:
+        items:
+          $ref: '#/definitions/entity.Qa'
+        type: array
+      createdAt:
+        type: string
+      deletedAt:
+        type: string
+      id:
+        type: integer
+      ownerId:
+        type: integer
+      parentId:
+        type: integer
+      question:
+        type: string
+      updatedAt:
+        type: string
+      user:
+        $ref: '#/definitions/entity.User'
     type: object
   entity.User:
     properties:
@@ -147,26 +202,25 @@ definitions:
     type: object
 host: localhost:8080
 info:
-  contact: {}
+  contact: { }
   description: :)
   title: AMAlanche
-  version: 0.0.1-SNAPSHOT
 paths:
   /auth/google-login:
     post:
       consumes:
-      - application/json
+        - application/json
       description: Perform Google login using an authorization code and return an
         access token.
       parameters:
-      - description: Google login request
-        in: body
-        name: requestBody
-        required: true
-        schema:
-          $ref: '#/definitions/dto.AuthGoogleLoginRequest'
+        - description: Google login request
+          in: body
+          name: requestBody
+          required: true
+          schema:
+            $ref: '#/definitions/dto.AuthGoogleLoginRequest'
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: Successfully generated Google access token
@@ -182,22 +236,22 @@ paths:
             $ref: '#/definitions/dto.ErrorResponse'
       summary: Perform Google login using authorization code
       tags:
-      - Auth
+        - Auth
   /auth/google-refresh:
     post:
       consumes:
-      - application/json
+        - application/json
       description: Update a Google access token using a refresh token and return the
         new access token.
       parameters:
-      - description: Google access token refresh request
-        in: body
-        name: refreshRequest
-        required: true
-        schema:
-          $ref: '#/definitions/dto.AuthGoogleRefreshRequest'
+        - description: Google access token refresh request
+          in: body
+          name: refreshRequest
+          required: true
+          schema:
+            $ref: '#/definitions/dto.AuthGoogleRefreshRequest'
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: Successfully updated Google access token
@@ -213,21 +267,21 @@ paths:
             $ref: '#/definitions/dto.ErrorResponse'
       summary: Update a Google access token using a refresh token
       tags:
-      - Auth
+        - Auth
   /auth/internal-login:
     post:
       consumes:
-      - application/json
+        - application/json
       description: Perform internal login using credentials and return an access token.
       parameters:
-      - description: Internal login request
-        in: body
-        name: requestBody
-        required: true
-        schema:
-          $ref: '#/definitions/dto.AuthInternalLoginRequest'
+        - description: Internal login request
+          in: body
+          name: requestBody
+          required: true
+          schema:
+            $ref: '#/definitions/dto.AuthInternalLoginRequest'
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: Successfully generated internal access token
@@ -247,26 +301,71 @@ paths:
             $ref: '#/definitions/dto.ErrorResponse'
       summary: Perform internal login using credentials
       tags:
-      - Auth
+        - Auth
+  /channels/{channelId}/users/{userId}/qa:
+    post:
+      consumes:
+        - application/json
+      description: Create a new Q&A in the specified channel for the authenticated
+        user.
+      parameters:
+        - description: ID of the user creating the Q&A
+          in: path
+          name: userId
+          required: true
+          type: integer
+        - description: ID of the channel where the Q&A is being created
+          in: path
+          name: channelId
+          required: true
+          type: integer
+        - description: Q&A creation data
+          in: body
+          name: requestBody
+          required: true
+          schema:
+            $ref: '#/definitions/dto.QaCreateRequest'
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: Q&A created successfully
+          schema:
+            $ref: '#/definitions/dto.QaResponse'
+        "400":
+          description: Bad request, invalid JSON or missing parameters
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "403":
+          description: Forbidden access, user does not have permission
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error, could not create Q&A
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Create a new Q&A entry
+      tags:
+        - QA
   /user/{userId}/channel:
     post:
       consumes:
-      - application/json
+        - application/json
       description: Create a new channel for a specific user.
       parameters:
-      - description: ID of the user who owns the channel
-        in: path
-        name: userId
-        required: true
-        type: integer
-      - description: Channel creation data
-        in: body
-        name: dto.channelCreateRequest
-        required: true
-        schema:
-          $ref: '#/definitions/dto.ChannelCreateRequest'
+        - description: ID of the user who owns the channel
+          in: path
+          name: userId
+          required: true
+          type: integer
+        - description: Channel creation data
+          in: body
+          name: dto.channelCreateRequest
+          required: true
+          schema:
+            $ref: '#/definitions/dto.ChannelCreateRequest'
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: Channel created successfully
@@ -286,21 +385,21 @@ paths:
             $ref: '#/definitions/dto.ErrorResponse'
       summary: Create a channel
       tags:
-      - Channels
+        - Channels
   /users:
     post:
       consumes:
-      - application/json
+        - application/json
       description: Creates a new user with the provided details.
       parameters:
-      - description: User creation request
-        in: body
-        name: requestBody
-        required: true
-        schema:
-          $ref: '#/definitions/dto.UserCreateRequest'
+        - description: User creation request
+          in: body
+          name: requestBody
+          required: true
+          schema:
+            $ref: '#/definitions/dto.UserCreateRequest'
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: User created successfully
@@ -316,20 +415,20 @@ paths:
             $ref: '#/definitions/dto.ErrorResponse'
       summary: Create a new user
       tags:
-      - Users
+        - Users
   /users/{id}:
     get:
       consumes:
-      - application/json
+        - application/json
       description: Retrieves user information based on the provided user ID.
       parameters:
-      - description: User ID
-        in: path
-        name: id
-        required: true
-        type: integer
+        - description: User ID
+          in: path
+          name: id
+          required: true
+          type: integer
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: User information retrieved successfully
@@ -349,26 +448,26 @@ paths:
             $ref: '#/definitions/dto.ErrorResponse'
       summary: Retrieve user information by ID
       tags:
-      - Users
+        - Users
     put:
       consumes:
-      - application/json
+        - application/json
       description: Updates user information based on the provided user ID and request
         details.
       parameters:
-      - description: User ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: User update request
-        in: body
-        name: requestBody
-        required: true
-        schema:
-          $ref: '#/definitions/dto.UserUpdateRequest'
+        - description: User ID
+          in: path
+          name: id
+          required: true
+          type: integer
+        - description: User update request
+          in: body
+          name: requestBody
+          required: true
+          schema:
+            $ref: '#/definitions/dto.UserUpdateRequest'
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: User information updated successfully
@@ -392,36 +491,37 @@ paths:
             $ref: '#/definitions/dto.ErrorResponse'
       summary: Update user information by ID
       tags:
-      - Users
+        - Users
   /users/{userId}/channels/{channelId}:
     get:
       consumes:
-      - application/json
-      description: Retrieve a channel by its ID.
+        - application/json
+      description: Retrieves the details of a channel by its ID for the authenticated
+        user.
       parameters:
-      - description: ID of the user
-        in: path
-        name: userId
-        required: true
-        type: integer
-      - description: ID of the channel
-        in: path
-        name: channelId
-        required: true
-        type: integer
+        - description: ID of the authenticated user
+          in: path
+          name: userId
+          required: true
+          type: integer
+        - description: ID of the channel to retrieve
+          in: path
+          name: channelId
+          required: true
+          type: integer
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
-          description: Channel retrieved successfully
+          description: Channel details retrieved successfully
           schema:
             $ref: '#/definitions/dto.ChannelResponse'
         "400":
-          description: Bad request
+          description: Bad request, user or channel ID is invalid
           schema:
             $ref: '#/definitions/dto.ErrorResponse'
         "403":
-          description: Forbidden access
+          description: Forbidden access, user is not allowed to access this channel
           schema:
             $ref: '#/definitions/dto.ErrorResponse'
         "404":
@@ -429,25 +529,68 @@ paths:
           schema:
             $ref: '#/definitions/dto.ErrorResponse'
         "500":
-          description: Internal server error
+          description: Internal Server Error
           schema:
             $ref: '#/definitions/dto.ErrorResponse'
-      summary: Get channel by id
+      summary: Get channel by ID
       tags:
-      - Channels
+        - Channels
+  /users/{userId}/channels/{channelId}/join:
+    post:
+      consumes:
+        - application/json
+      description: Join a channel with the provided channel ID as a user.
+      parameters:
+        - description: ID of the user attempting to join the channel
+          in: path
+          name: userId
+          required: true
+          type: integer
+        - description: ID of the channel to join
+          in: path
+          name: channelId
+          required: true
+          type: integer
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: User successfully joined the channel
+          schema:
+            $ref: '#/definitions/dto.ChannelResponse'
+        "400":
+          description: Bad request, invalid user or channel ID
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "403":
+          description: Forbidden access, user trying to join a channel with different
+            user ID
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "404":
+          description: Channel not found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: User joins a channel
+      tags:
+        - Channels
   /users/{userId}/channels/all:
     get:
       consumes:
-      - application/json
+        - application/json
       description: Retrieve all channels associated with a specific user.
       parameters:
-      - description: ID of the user
-        in: path
-        name: userId
-        required: true
-        type: integer
+        - description: ID of the user
+          in: path
+          name: userId
+          required: true
+          type: integer
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: Channels retrieved successfully
@@ -465,21 +608,21 @@ paths:
             $ref: '#/definitions/dto.ErrorResponse'
       summary: Get all channels for a user
       tags:
-      - Channels
+        - Channels
   /users/{userId}/channels/member:
     get:
       consumes:
-      - application/json
+        - application/json
       description: Retrieve all visible channels, you don't own, associated with a
         specific user.
       parameters:
-      - description: ID of the user
-        in: path
-        name: userId
-        required: true
-        type: integer
+        - description: ID of the user
+          in: path
+          name: userId
+          required: true
+          type: integer
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: Visible channels retrieved successfully
@@ -497,20 +640,20 @@ paths:
             $ref: '#/definitions/dto.ErrorResponse'
       summary: Get all channels visible for a user you don't own
       tags:
-      - Channels
+        - Channels
   /users/{userId}/channels/owned:
     get:
       consumes:
-      - application/json
+        - application/json
       description: Retrieve all channels owned by a specific user.
       parameters:
-      - description: ID of the user
-        in: path
-        name: userId
-        required: true
-        type: integer
+        - description: ID of the user
+          in: path
+          name: userId
+          required: true
+          type: integer
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: Owned channels retrieved successfully
@@ -532,5 +675,5 @@ paths:
             $ref: '#/definitions/dto.ErrorResponse'
       summary: Get all channels owned by a user
       tags:
-      - Channels
+        - Channels
 swagger: "2.0"

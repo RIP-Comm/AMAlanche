@@ -58,7 +58,7 @@ func (p *DatabaseProvider) migrateDB() {
 
 	if databaseConfig.AutoMigrate {
 		log.Println("Start auto DB migration")
-		p.DB.AutoMigrate(&entity.User{}, &entity.Channel{})
+		p.DB.AutoMigrate(&entity.User{}, &entity.Channel{}, &entity.Qa{})
 		log.Println("End auto DB migration")
 	}
 }

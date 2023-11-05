@@ -3,7 +3,7 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/RIP-Comm/AMAlanche/utils/mappers"
+	"github.com/RIP-Comm/AMAlanche/mappers"
 
 	"github.com/RIP-Comm/AMAlanche/models/entity"
 	"github.com/RIP-Comm/AMAlanche/utils/role"
@@ -45,14 +45,14 @@ func (uc *UserController) getUserById() gin.HandlerFunc {
 		user, customError := services.GetUserById(userId)
 		if customError != &ex.NoError {
 			if customError == &ex.UserNotFound {
-				c.JSON(http.StatusNotFound, customError.Message)
+				c.JSON(http.StatusNotFound, dto.ErrorResponse{Error: customError.Message})
 			} else {
-				c.JSON(http.StatusInternalServerError, customError.Message)
+				c.JSON(http.StatusInternalServerError, dto.ErrorResponse{Error: customError.Message})
 			}
 			return
 		}
 
-		response := mappers.MapUserEntityToUserResponse(user)
+		response := mappers.MapUserEntityToUserResponse(*user)
 		c.JSON(
 			http.StatusOK,
 			response,
@@ -101,7 +101,7 @@ func (uc *UserController) createUser() gin.HandlerFunc {
 			return
 		}
 
-		response := mappers.MapUserEntityToUserResponse(user)
+		response := mappers.MapUserEntityToUserResponse(*user)
 		c.JSON(http.StatusOK, response)
 	}
 }
@@ -129,10 +129,10 @@ func (uc *UserController) updateUser() gin.HandlerFunc {
 			return
 		}
 
-		authenticatedUserId := c.MustGet("authenticatedUserId").(uint)
+		authenticatedUser := c.MustGet("authenticatedUser").(*entity.User)
 
-		if authenticatedUserId != userId {
-			c.JSON(http.StatusForbidden, ex.ForbiddenMessage)
+		if authenticatedUser.ID != userId {
+			c.JSON(http.StatusForbidden, dto.ErrorResponse{Error: ex.ForbiddenMessage})
 			return
 		}
 
@@ -155,7 +155,7 @@ func (uc *UserController) updateUser() gin.HandlerFunc {
 			return
 		}
 
-		response := mappers.MapUserEntityToUserResponse(user)
+		response := mappers.MapUserEntityToUserResponse(*user)
 		c.JSON(
 			http.StatusOK,
 			response,
