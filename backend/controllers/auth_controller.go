@@ -76,16 +76,16 @@ func (uc *AuthController) GoogleLoginWithCode() gin.HandlerFunc {
 				user, internalError := services.CreateUser(newUser)
 				if internalError != &ex.NoError {
 					if customError.Code == ex.ConflictCode {
-						c.JSON(http.StatusConflict, customError.Message)
+						c.JSON(http.StatusConflict, dto.ErrorResponse{Error: customError.Message})
 						return
 					}
-					c.JSON(http.StatusInternalServerError, internalError.Message)
+					c.JSON(http.StatusInternalServerError, dto.ErrorResponse{Error: internalError.Message})
 					return
 				} else {
 					userId = user.ID
 				}
 			} else {
-				c.JSON(http.StatusInternalServerError, customError.Message)
+				c.JSON(http.StatusInternalServerError, dto.ErrorResponse{Error: customError.Message})
 				return
 			}
 		} else {
@@ -170,7 +170,7 @@ func (uc *AuthController) InternalLogin() gin.HandlerFunc {
 			if customError == &ex.UserNotFound {
 				c.JSON(http.StatusUnauthorized, dto.ErrorResponse{Error: ex.BadCredentialMessage})
 			} else {
-				c.JSON(http.StatusInternalServerError, customError.Message)
+				c.JSON(http.StatusInternalServerError, dto.ErrorResponse{Error: customError.Message})
 			}
 			return
 		}
@@ -190,7 +190,7 @@ func (uc *AuthController) InternalLogin() gin.HandlerFunc {
 
 		accessToken, err := jwt.NewWithClaims(jwt.SigningMethodHS256, token).SignedString([]byte(internalAuthConfig.SecretKey))
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, customError.Message)
+			c.JSON(http.StatusInternalServerError, dto.ErrorResponse{Error: customError.Message})
 			return
 		}
 

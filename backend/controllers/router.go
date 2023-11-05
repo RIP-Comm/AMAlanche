@@ -11,7 +11,8 @@ import (
 func SetupAPIRoutes(router *gin.Engine) {
 	authController := &AuthController{}
 	userController := &UserController{}
-	userChannelController := &UserChannelController{}
+	channelController := &ChannelController{}
+	qaController := &QaController{}
 
 	// swagger
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
@@ -38,14 +39,21 @@ func SetupAPIRoutes(router *gin.Engine) {
 			userApi.PUT("/:userId", userController.updateUser())
 
 			// user
-			userResourceApi := userApi.Group("/:userId/channels")
+			channelApi := userApi.Group("/:userId/channels")
 			{
 				// authenticated
-				userResourceApi.POST("", userChannelController.CreateChannel())
-				userResourceApi.GET("/:channelId", userChannelController.GetById())
-				userResourceApi.GET("/all", userChannelController.GetAll())
-				userResourceApi.GET("/owner", userChannelController.GetAllOwned())
-				userResourceApi.GET("/member", userChannelController.GetAllMember())
+				channelApi.POST("", channelController.CreateChannel())
+				channelApi.GET("/:channelId", channelController.GetById())
+				channelApi.PATCH("/:channelId/join", channelController.Join())
+				channelApi.GET("/all", channelController.GetAll())
+				channelApi.GET("/owner", channelController.GetAllOwned())
+				channelApi.GET("/member", channelController.GetAllMember())
+
+				qaApi := channelApi.Group("/:channelId/qas")
+				{
+					// authenticated
+					qaApi.POST("", qaController.CreateQa())
+				}
 			}
 		}
 	}

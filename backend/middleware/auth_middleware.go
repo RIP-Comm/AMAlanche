@@ -39,7 +39,7 @@ func AuthMiddleware() gin.HandlerFunc {
 					return
 				}
 
-				c.Set("authenticatedUserId", user.ID)
+				c.Set("authenticatedUser", user)
 			} else {
 				c.JSON(http.StatusUnauthorized, dto.ErrorResponse{Error: ex.NotImplementedMessage})
 				c.Abort()

@@ -18,3 +18,18 @@ func MapChannelEntityToChannelResponseDTO(entity entity.Channel) dto.ChannelResp
 		OwnerId: entity.OwnerId,
 	}
 }
+
+func MapChannelEntityEagerToChannelResponseDTO(entity entity.Channel) dto.ChannelEagerResponse {
+	qas := &[]dto.QaResponse{}
+	for _, qa := range entity.Qas {
+		channelResponse := MapQaEntityToDto(qa)
+		*qas = append(*qas, channelResponse)
+	}
+
+	return dto.ChannelEagerResponse{
+		Id:      entity.ID,
+		Name:    entity.Name,
+		OwnerId: entity.OwnerId,
+		Qas:     *qas,
+	}
+}

@@ -3,15 +3,17 @@ package controllers
 import (
 	"net/http"
 
+	"github.com/RIP-Comm/AMAlanche/mappers"
+	"github.com/RIP-Comm/AMAlanche/models/entity"
+
 	"github.com/RIP-Comm/AMAlanche/models/dto"
 	"github.com/RIP-Comm/AMAlanche/services"
 	"github.com/RIP-Comm/AMAlanche/utils"
 	"github.com/RIP-Comm/AMAlanche/utils/ex"
-	"github.com/RIP-Comm/AMAlanche/utils/mappers"
 	"github.com/gin-gonic/gin"
 )
 
-type UserChannelController struct{}
+type ChannelController struct{}
 
 // @Tags Channels
 // @Summary Create a channel
@@ -25,7 +27,7 @@ type UserChannelController struct{}
 // @Failure 403 {object} dto.ErrorResponse "Forbidden access"
 // @Failure 500 {object} dto.ErrorResponse "Internal server error"
 // @Router /user/{userId}/channel [post]
-func (uc *UserChannelController) CreateChannel() gin.HandlerFunc {
+func (uc *ChannelController) CreateChannel() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		userIdStr := c.Param("userId")
 
@@ -35,10 +37,10 @@ func (uc *UserChannelController) CreateChannel() gin.HandlerFunc {
 			return
 		}
 
-		authenticatedUserId := c.MustGet("authenticatedUserId").(uint)
+		authenticatedUser := c.MustGet("authenticatedUser").(*entity.User)
 
-		if authenticatedUserId != userId {
-			c.JSON(http.StatusForbidden, ex.ForbiddenMessage)
+		if authenticatedUser.ID != userId {
+			c.JSON(http.StatusForbidden, dto.ErrorResponse{Error: ex.ForbiddenMessage})
 			return
 		}
 
@@ -51,7 +53,7 @@ func (uc *UserChannelController) CreateChannel() gin.HandlerFunc {
 
 		channel, customError := services.CreateChannel(userId, requestBody)
 		if customError != &ex.NoError {
-			c.JSON(http.StatusInternalServerError, customError.Message)
+			c.JSON(http.StatusInternalServerError, dto.ErrorResponse{Error: customError.Message})
 			return
 		}
 
@@ -66,19 +68,19 @@ func (uc *UserChannelController) CreateChannel() gin.HandlerFunc {
 }
 
 // @Tags Channels
-// @Summary Get channel by id
-// @Description Retrieve a channel by its ID.
+// @Summary Get channel by ID
+// @Description Retrieves the details of a channel by its ID for the authenticated user.
 // @Accept json
 // @Produce json
-// @Param userId path int true "ID of the user"
-// @Param channelId path int true "ID of the channel"
-// @Success 200 {object} dto.ChannelResponse "Channel retrieved successfully"
-// @Failure 400 {object} dto.ErrorResponse "Bad request"
-// @Failure 403 {object} dto.ErrorResponse "Forbidden access"
+// @Param userId path int true "ID of the authenticated user"
+// @Param channelId path int true "ID of the channel to retrieve"
+// @Success 200 {object} dto.ChannelResponse "Channel details retrieved successfully"
+// @Failure 400 {object} dto.ErrorResponse "Bad request, user or channel ID is invalid"
+// @Failure 403 {object} dto.ErrorResponse "Forbidden access, user is not allowed to access this channel"
 // @Failure 404 {object} dto.ErrorResponse "Channel not found"
-// @Failure 500 {object} dto.ErrorResponse "Internal server error"
-// @Router /users/{userId}/channels/{channelId}  [get]
-func (uc *UserChannelController) GetById() gin.HandlerFunc {
+// @Failure 500 {object} dto.ErrorResponse "Internal Server Error"
+// @Router /users/{userId}/channels/{channelId} [get]
+func (uc *ChannelController) GetById() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		userIdStr := c.Param("userId")
 
@@ -88,10 +90,10 @@ func (uc *UserChannelController) GetById() gin.HandlerFunc {
 			return
 		}
 
-		authenticatedUserId := c.MustGet("authenticatedUserId").(uint)
+		authenticatedUser := c.MustGet("authenticatedUser").(*entity.User)
 
-		if authenticatedUserId != userId {
-			c.JSON(http.StatusForbidden, ex.ForbiddenMessage)
+		if authenticatedUser.ID != userId {
+			c.JSON(http.StatusForbidden, dto.ErrorResponse{Error: ex.ForbiddenMessage})
 			return
 		}
 
@@ -102,17 +104,17 @@ func (uc *UserChannelController) GetById() gin.HandlerFunc {
 			return
 		}
 
-		channels, customError := services.GetById(userId, channelId)
+		channels, customError := services.GetChannelById(channelId)
 		if customError != &ex.NoError {
 			if customError == &ex.ChannelNotFound {
-				c.JSON(http.StatusNotFound, customError.Message)
+				c.JSON(http.StatusNotFound, dto.ErrorResponse{Error: customError.Message})
 			} else {
-				c.JSON(http.StatusInternalServerError, customError.Message)
+				c.JSON(http.StatusInternalServerError, dto.ErrorResponse{Error: customError.Message})
 			}
 			return
 		}
 
-		response := mappers.MapChannelEntityToChannelResponseDTO(*channels)
+		response := mappers.MapChannelEntityEagerToChannelResponseDTO(*channels)
 		c.JSON(
 			http.StatusOK,
 			response,
@@ -130,7 +132,7 @@ func (uc *UserChannelController) GetById() gin.HandlerFunc {
 // @Failure 400 {object} dto.ErrorResponse "Bad request"
 // @Failure 403 {object} dto.ErrorResponse "Forbidden access"
 // @Router /users/{userId}/channels/all  [get]
-func (uc *UserChannelController) GetAll() gin.HandlerFunc {
+func (uc *ChannelController) GetAll() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		userIdStr := c.Param("userId")
 
@@ -140,16 +142,16 @@ func (uc *UserChannelController) GetAll() gin.HandlerFunc {
 			return
 		}
 
-		authenticatedUserId := c.MustGet("authenticatedUserId").(uint)
+		authenticatedUser := c.MustGet("authenticatedUser").(*entity.User)
 
-		if authenticatedUserId != userId {
-			c.JSON(http.StatusForbidden, ex.ForbiddenMessage)
+		if authenticatedUser.ID != userId {
+			c.JSON(http.StatusForbidden, dto.ErrorResponse{Error: ex.ForbiddenMessage})
 			return
 		}
 
 		channels, customError := services.GetAllChannelByUserId(userId, 0)
 		if customError != &ex.NoError {
-			c.JSON(http.StatusInternalServerError, customError.Message)
+			c.JSON(http.StatusInternalServerError, dto.ErrorResponse{Error: customError.Message})
 			return
 		}
 
@@ -177,7 +179,7 @@ func (uc *UserChannelController) GetAll() gin.HandlerFunc {
 // @Failure 403 {object} dto.ErrorResponse "Forbidden access"
 // @Failure 500 {object} dto.ErrorResponse "Internal server error"
 // @Router /users/{userId}/channels/owned [get]
-func (uc *UserChannelController) GetAllOwned() gin.HandlerFunc {
+func (uc *ChannelController) GetAllOwned() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		userIdStr := c.Param("userId")
 
@@ -187,16 +189,16 @@ func (uc *UserChannelController) GetAllOwned() gin.HandlerFunc {
 			return
 		}
 
-		authenticatedUserId := c.MustGet("authenticatedUserId").(uint)
+		authenticatedUser := c.MustGet("authenticatedUser").(*entity.User)
 
-		if authenticatedUserId != userId {
-			c.JSON(http.StatusForbidden, ex.ForbiddenMessage)
+		if authenticatedUser.ID != userId {
+			c.JSON(http.StatusForbidden, dto.ErrorResponse{Error: ex.ForbiddenMessage})
 			return
 		}
 
 		channels, customError := services.GetAllChannelByUserId(userId, 2)
 		if customError != &ex.NoError {
-			c.JSON(http.StatusInternalServerError, customError.Message)
+			c.JSON(http.StatusInternalServerError, dto.ErrorResponse{Error: customError.Message})
 			return
 		}
 
@@ -223,7 +225,7 @@ func (uc *UserChannelController) GetAllOwned() gin.HandlerFunc {
 // @Failure 400 {object} dto.ErrorResponse "Bad request"
 // @Failure 403 {object} dto.ErrorResponse "Forbidden access"
 // @Router /users/{userId}/channels/member [get]
-func (uc *UserChannelController) GetAllMember() gin.HandlerFunc {
+func (uc *ChannelController) GetAllMember() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		userIdStr := c.Param("userId")
 
@@ -233,16 +235,16 @@ func (uc *UserChannelController) GetAllMember() gin.HandlerFunc {
 			return
 		}
 
-		authenticatedUserId := c.MustGet("authenticatedUserId").(uint)
+		authenticatedUser := c.MustGet("authenticatedUser").(*entity.User)
 
-		if authenticatedUserId != userId {
-			c.JSON(http.StatusForbidden, ex.ForbiddenMessage)
+		if authenticatedUser.ID != userId {
+			c.JSON(http.StatusForbidden, dto.ErrorResponse{Error: ex.ForbiddenMessage})
 			return
 		}
 
 		channels, customError := services.GetAllChannelByUserId(userId, 1)
 		if customError != &ex.NoError {
-			c.JSON(http.StatusInternalServerError, customError.Message)
+			c.JSON(http.StatusInternalServerError, dto.ErrorResponse{Error: customError.Message})
 			return
 		}
 
@@ -252,6 +254,61 @@ func (uc *UserChannelController) GetAllMember() gin.HandlerFunc {
 			*response = append(*response, channelResponse)
 		}
 
+		c.JSON(
+			http.StatusOK,
+			response,
+		)
+	}
+}
+
+// @Tags Channels
+// @Summary User joins a channel
+// @Description Join a channel with the provided channel ID as a user.
+// @Accept json
+// @Produce json
+// @Param userId path int true "ID of the user attempting to join the channel"
+// @Param channelId path int true "ID of the channel to join"
+// @Success 200 {object} dto.ChannelResponse "User successfully joined the channel"
+// @Failure 400 {object} dto.ErrorResponse "Bad request, invalid user or channel ID"
+// @Failure 403 {object} dto.ErrorResponse "Forbidden access, user trying to join a channel with different user ID"
+// @Failure 404 {object} dto.ErrorResponse "Channel not found"
+// @Failure 500 {object} dto.ErrorResponse "Internal Server Error"
+// @Router /users/{userId}/channels/{channelId}/join [post]
+func (uc *ChannelController) Join() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		userIdStr := c.Param("userId")
+
+		userId, err := utils.StrToUint(userIdStr)
+		if userIdStr == "" || err != nil {
+			c.JSON(http.StatusBadRequest, dto.ErrorResponse{Error: ex.UserIdNotFoundMessage})
+			return
+		}
+
+		authenticatedUser := c.MustGet("authenticatedUser").(*entity.User)
+
+		if authenticatedUser.ID != userId {
+			c.JSON(http.StatusForbidden, dto.ErrorResponse{Error: ex.ForbiddenMessage})
+			return
+		}
+
+		channelIdStr := c.Param("channelId")
+		channelId, err := utils.StrToUint(channelIdStr)
+		if userIdStr == "" || err != nil {
+			c.JSON(http.StatusBadRequest, dto.ErrorResponse{Error: ex.ChannelIdNotFoundMessage})
+			return
+		}
+
+		channel, customError := services.JoinChannel(*authenticatedUser, channelId)
+		if customError != &ex.NoError {
+			if customError == &ex.ChannelNotFound {
+				c.JSON(http.StatusNotFound, dto.ErrorResponse{Error: customError.Message})
+			} else {
+				c.JSON(http.StatusInternalServerError, dto.ErrorResponse{Error: customError.Message})
+			}
+			return
+		}
+
+		response := mappers.MapChannelEntityEagerToChannelResponseDTO(*channel)
 		c.JSON(
 			http.StatusOK,
 			response,
