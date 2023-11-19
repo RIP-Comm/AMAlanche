@@ -15,6 +15,7 @@ import (
 
 type QaController struct{}
 
+// CreateQa
 // @Tags QA
 // @Summary Create a new Q&A entry
 // @Description Create a new Q&A in the specified channel for the authenticated user.
@@ -27,7 +28,7 @@ type QaController struct{}
 // @Failure 400 {object} dto.ErrorResponse "Bad request, invalid JSON or missing parameters"
 // @Failure 403 {object} dto.ErrorResponse "Forbidden access, user does not have permission"
 // @Failure 500 {object} dto.ErrorResponse "Internal Server Error, could not create Q&A"
-// @Router /channels/{channelId}/users/{userId}/qa [post]
+// @Router /channels/{channelId}/users/{userId}/qas [post]
 func (uc *QaController) CreateQa() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		userIdStr := c.Param("userId")

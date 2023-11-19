@@ -15,6 +15,7 @@ import (
 
 type ChannelController struct{}
 
+// CreateChannel
 // @Tags Channels
 // @Summary Create a channel
 // @Description Create a new channel for a specific user.
@@ -26,7 +27,7 @@ type ChannelController struct{}
 // @Failure 400 {object} dto.ErrorResponse "Bad request"
 // @Failure 403 {object} dto.ErrorResponse "Forbidden access"
 // @Failure 500 {object} dto.ErrorResponse "Internal server error"
-// @Router /user/{userId}/channel [post]
+// @Router /users/{userId}/channels [post]
 func (uc *ChannelController) CreateChannel() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		userIdStr := c.Param("userId")
@@ -67,6 +68,7 @@ func (uc *ChannelController) CreateChannel() gin.HandlerFunc {
 	}
 }
 
+// GetById
 // @Tags Channels
 // @Summary Get channel by ID
 // @Description Retrieves the details of a channel by its ID for the authenticated user.
@@ -122,6 +124,7 @@ func (uc *ChannelController) GetById() gin.HandlerFunc {
 	}
 }
 
+// GetAll
 // @Tags Channels
 // @Summary Get all channels for a user
 // @Description Retrieve all channels associated with a specific user.
@@ -168,6 +171,7 @@ func (uc *ChannelController) GetAll() gin.HandlerFunc {
 	}
 }
 
+// GetAllOwned
 // @Tags Channels
 // @Summary Get all channels owned by a user
 // @Description Retrieve all channels owned by a specific user.
@@ -215,6 +219,7 @@ func (uc *ChannelController) GetAllOwned() gin.HandlerFunc {
 	}
 }
 
+// GetAllMember
 // @Tags Channels
 // @Summary Get all channels visible for a user you don't own
 // @Description Retrieve all visible channels, you don't own, associated with a specific user.
@@ -261,6 +266,7 @@ func (uc *ChannelController) GetAllMember() gin.HandlerFunc {
 	}
 }
 
+// Join
 // @Tags Channels
 // @Summary User joins a channel
 // @Description Join a channel with the provided channel ID as a user.

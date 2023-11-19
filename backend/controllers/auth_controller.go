@@ -24,6 +24,7 @@ import (
 
 type AuthController struct{}
 
+// GoogleLoginWithCode
 // @tags Auth
 // @Summary Perform Google login using authorization code
 // @Description Perform Google login using an authorization code and return an access token.
@@ -33,7 +34,7 @@ type AuthController struct{}
 // @Success 200 {object} dto.AuthGoogleTokenResponse "Successfully generated Google access token"
 // @Failure 400 {object} dto.ErrorResponse "Invalid JSON request"
 // @Failure 500 {object} dto.ErrorResponse "Internal server error"
-// @Router /auth/google-login [post]
+// @Router /auth/google/login [post]
 func (uc *AuthController) GoogleLoginWithCode() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var requestBody dto.AuthGoogleLoginRequest
@@ -103,6 +104,7 @@ func (uc *AuthController) GoogleLoginWithCode() gin.HandlerFunc {
 	}
 }
 
+// GoogleRefreshToken
 // @tags Auth
 // @Summary Update a Google access token using a refresh token
 // @Description Update a Google access token using a refresh token and return the new access token.
@@ -112,7 +114,7 @@ func (uc *AuthController) GoogleLoginWithCode() gin.HandlerFunc {
 // @Success 200 {object} dto.AuthGoogleTokenResponse "Successfully updated Google access token"
 // @Failure 400 {object} dto.ErrorResponse "Invalid JSON request"
 // @Failure 500 {object} dto.ErrorResponse "Internal server error"
-// @Router /auth/google-refresh [post]
+// @Router /auth/google/refresh [post]
 func (uc *AuthController) GoogleRefreshToken() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var refreshRequest dto.AuthGoogleRefreshRequest
@@ -143,6 +145,7 @@ func (uc *AuthController) GoogleRefreshToken() gin.HandlerFunc {
 	}
 }
 
+// InternalLogin
 // @tags Auth
 // @Summary Perform internal login using credentials
 // @Description Perform internal login using credentials and return an access token.
@@ -153,7 +156,7 @@ func (uc *AuthController) GoogleRefreshToken() gin.HandlerFunc {
 // @Failure 400 {object} dto.ErrorResponse "Invalid JSON request"
 // @Failure 401 {object} dto.ErrorResponse "Invalid credentials"
 // @Failure 500 {object} dto.ErrorResponse "Internal server error"
-// @Router /auth/internal-login [post]
+// @Router /auth/login [post]
 func (uc *AuthController) InternalLogin() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		internalAuthConfig := configs.GetConfigInstance().Config.Security.Auth.InternalConfig
