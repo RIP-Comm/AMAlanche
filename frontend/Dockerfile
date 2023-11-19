@@ -2,7 +2,7 @@ FROM node:21.2.0
 
 WORKDIR /usr/src/app
 
-COPY package.json package-lock.json ./
+COPY . .
 
 RUN npm install
-CMD [ "npm run" ]
+CMD [ "npm" , "start" ]

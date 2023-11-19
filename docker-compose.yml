@@ -6,8 +6,38 @@ services:
     container_name: ama-postgres
     image: postgres:15.4
     restart: always
+    networks:
+      - network1
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
+
+  backend:
+    container_name: ama-backend
+    depends_on:
+      - postgres
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    environment:
+      DB_HOST: postgres  
+    networks:
+      - network1
+    ports:
+      - "8080:8080"
+
+  frontend:
+    container_name: ama-frontend
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    networks:
+      - network1
+    ports:
+      - "3000:3000"
+
+networks:
+  network1:
+    
