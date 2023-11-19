@@ -1,6 +1,7 @@
 #BE
 backend/AMAlanche
 backend/.env
+backend/docs
 
 # Binaries for programs and plugins
 *.exe
