@@ -21,6 +21,7 @@ import (
 
 type UserController struct{}
 
+// GetUserById
 // @tags Users
 // @Summary Retrieve user information by ID
 // @Description Retrieves user information based on the provided user ID.
@@ -32,7 +33,7 @@ type UserController struct{}
 // @Failure 404 {object} dto.ErrorResponse "User not found"
 // @Failure 500 {object} dto.ErrorResponse "Internal server error"
 // @Router /users/{id} [get]
-func (uc *UserController) getUserById() gin.HandlerFunc {
+func (uc *UserController) GetUserById() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		userisdStr := c.Param("userId")
 
@@ -60,6 +61,7 @@ func (uc *UserController) getUserById() gin.HandlerFunc {
 	}
 }
 
+// CreateUser
 // @tags Users
 // @Summary Create a new user
 // @Description Creates a new user with the provided details.
@@ -70,7 +72,7 @@ func (uc *UserController) getUserById() gin.HandlerFunc {
 // @Failure 400 {object} dto.ErrorResponse "Invalid JSON request"
 // @Failure 500 {object} dto.ErrorResponse "Internal server error"
 // @Router /users [post]
-func (uc *UserController) createUser() gin.HandlerFunc {
+func (uc *UserController) CreateUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var requestBody dto.UserCreateRequest
 
@@ -106,6 +108,7 @@ func (uc *UserController) createUser() gin.HandlerFunc {
 	}
 }
 
+// UpdateUser
 // @tags Users
 // @Summary Update user information by ID
 // @Description Updates user information based on the provided user ID and request details.
@@ -119,7 +122,7 @@ func (uc *UserController) createUser() gin.HandlerFunc {
 // @Failure 404 {object} dto.ErrorResponse "User not found"
 // @Failure 500 {object} dto.ErrorResponse "Internal server error"
 // @Router /users/{id} [put]
-func (uc *UserController) updateUser() gin.HandlerFunc {
+func (uc *UserController) UpdateUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		userIdStr := c.Param("userId")
 

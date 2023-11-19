@@ -31,12 +31,12 @@ func SetupAPIRoutes(router *gin.Engine) {
 		userApi := api.Group("/users")
 		{
 			// non authenticated
-			userApi.POST("/", userController.createUser())
+			userApi.POST("/", userController.CreateUser())
 
 			// authenticated
 			userApi.Use(middleware.AuthMiddleware())
-			userApi.GET("/:userId", userController.getUserById())
-			userApi.PUT("/:userId", userController.updateUser())
+			userApi.GET("/:userId", userController.GetUserById())
+			userApi.PUT("/:userId", userController.UpdateUser())
 
 			// user
 			channelApi := userApi.Group("/:userId/channels")
